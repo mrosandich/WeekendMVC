@@ -35,11 +35,14 @@ class cFormElement{
 	var $form_value_default = ""; //if no value set then load it with this after post
 	var $form_label			= ""; //the title part of the html 
 	var $form_caption		= "";
+	var $form_cntrl_values	= array(); //hold thing like the option values in a select control
+	
 	
 	var $is_visible			= true;
 	var $is_bound			= true; //binds the element to a column. you would set this to false for a submit button
 	var $auto_populate_db	= true; //when a select is called fill in the data
 	var $auto_populate_post	= true; //when a post is done fill in the data from $POST
+	var $bind_to_post		= true;
 	
 	var $post_filter_type = "FILTER_SANITIZE_STRING";
 	
@@ -84,19 +87,7 @@ class cFormElement{
 		}
 	}
 	
-	function notEmpty($arrayParams){
-		if( $this->form_value == "" ){
-			$this->HTMLErrors[] = array($this->col_name => $this->form_label . " can't be blank");
-		}
-	}
 	
-	function isEmail($arrayParams){
-		if (!filter_var($this->form_value, FILTER_VALIDATE_EMAIL) === false) {
-			//valid email
-		} else {
-			$this->HTMLErrors[] = array($this->col_name => $this->form_label . " is not a valid email address");
-		}
-	}
 	
 	
 	
@@ -127,7 +118,47 @@ class cFormElement{
 			return "$temp_value";
 		}
 		
+		if( $this->form_web_type == "select" ){
+			$this->is_visible = true;
+			$RetHTML = "<select name=\"{$this->post_name}\" id=\"{$this->post_name}\">\n";
+			$HitAnItem = 0;
+			foreach( $this->form_cntrl_values as $optval => $opttext ){
+				if($optval == $temp_value ){
+					$RetHTML .= "\t<option value=\"$optval\" selected>$opttext</option>\n";
+					$HitAnItem = 1;
+				}else{
+					$RetHTML .= "\t<option value=\"$optval\">$opttext</option>\n";
+				}
+			}
+			//if they have the value of an item but it is not in the list lets make that an option.
+			if( $HitAnItem == 0 && $temp_value != "" ){
+				$RetHTML .= "\t<option value=\"$temp_value\">$temp_value</option>\n";
+			}
+			
+			$RetHTML .= "</select>\n";
+			
+			return $RetHTML;
+		}
 		
+		
+	}
+	
+	//-----------------------------------------------------------------------------------------------
+	//											Validation.		
+	//-----------------------------------------------------------------------------------------------
+	
+	function notEmpty($arrayParams){
+		if( $this->form_value == "" ){
+			$this->HTMLErrors[] = array($this->col_name => $this->form_label . " can't be blank");
+		}
+	}
+	
+	function isEmail($arrayParams){
+		if (!filter_var($this->form_value, FILTER_VALIDATE_EMAIL) === false) {
+			//valid email
+		} else {
+			$this->HTMLErrors[] = array($this->col_name => $this->form_label . " is not a valid email address");
+		}
 	}
 }
 ?>

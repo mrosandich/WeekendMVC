@@ -27,16 +27,17 @@ class cAPP{
 	var $db;
 	var $config;
 	var $user;
-	var $AppName 		= "";
-	var $AppTemplate 	= "";
-	var $page_content	= "";
-	var $menu_content	= "";
-	var $current_pages_index = -1;
+	var $AppName 				= "";
+	var $AppTemplate 			= "";
+	var $page_content			= "";
+	var $menu_content			= "";
+	var $menu_sub_content 		= "";
+	var $current_pages_index 	= -1;
 	
 	//this stores all the information about the pages in the app
-	var $pages_array = array();
-	var $current_app_name = "";
-	var $current_app_page = "";
+	var $pages_array 		= array();
+	var $current_app_name 	= "";
+	var $current_app_page 	= "";
 	
 	var $app_user_message 		= "";
 	var $app_user_message_type 	= ""; //good,bad,warning or what ever you want to use
@@ -91,28 +92,81 @@ class cAPP{
 		
 		for($x=0;$x<count($this->pages_array);$x++){
 			if($this->pages_array[$x]->menu_is_menu_item == 1 ){
-				$isActive = 0;
-				if($this->pages_array[$x]->app_page == $this->current_app_page ){
-					$isActive = 1;
-				}
-				if($this->pages_array[$x]->is_public == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1 ){
-					//menu item is public, always show
-					$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
-				}
-				if($this->pages_array[$x]->is_public == 0 && $this->user->isLoggedIn() == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
-					//menu item is logged in only
-					$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
-				}
-				
-				if($this->pages_array[$x]->is_public == 2 && $this->user->isLoggedIn() == 0 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
-					//menu item is logged out only but not public.
-					//Example - you wouldn't show the login menu if your already logged in.
-					$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
-				}
+				if($this->pages_array[$x]->menu_group == "" || $this->pages_array[$x]->menu_group == $this->pages_array[$x]->app_page){//has no submenu or is a parent menu
+					$isActive = 0;
+					if($this->pages_array[$x]->app_page == $this->current_app_page || $this->inParentSubMenu($this->pages_array[$x]->app_page) == true ){
+						$isActive = 1;
+					}
+					if($this->pages_array[$x]->is_public == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1 ){
+						//menu item is public, always show
+						$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
+						if( $this->pages_array[$x]->menu_group == $this->pages_array[$x]->app_page && $this->getSubMenuName() == $this->pages_array[$x]->menu_group){
+							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+						}
+					}
+					if($this->pages_array[$x]->is_public == 0 && $this->user->isLoggedIn() == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
+						//menu item is logged in only
+						$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
+						if( $this->pages_array[$x]->menu_group == $this->pages_array[$x]->app_page && $this->getSubMenuName() == $this->pages_array[$x]->menu_group){
+							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+						}
+					}
+					
+					if($this->pages_array[$x]->is_public == 2 && $this->user->isLoggedIn() == 0 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
+						//menu item is logged out only but not public.
+						//Example - you wouldn't show the login menu if your already logged in.
+						$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
+						if( $this->pages_array[$x]->menu_group == $this->pages_array[$x]->app_page && $this->getSubMenuName() == $this->pages_array[$x]->menu_group){
+							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+						}
+					}
+				}else{//end menu_group
+					if($this->pages_array[$x]->menu_group == $this->current_app_page || $this->getSubMenuName() == $this->pages_array[$x]->menu_group){
+						$isActiveSub = 0;
+						if($this->pages_array[$x]->app_page == $this->current_app_page ){
+							$isActiveSub = 1;
+						}
+						if($this->pages_array[$x]->is_public == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1 ){
+							//menu item is public, always show
+							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+						}
+						if($this->pages_array[$x]->is_public == 0 && $this->user->isLoggedIn() == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
+							//menu item is logged in only
+							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+						}
+						
+						if($this->pages_array[$x]->is_public == 2 && $this->user->isLoggedIn() == 0 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
+							//menu item is logged out only but not public.
+							//Example - you wouldn't show the login menu if your already logged in.
+							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+						}
+					}
+				}//end else menu_group
 			}
 		}
 		$this->menu_content = rtrim($this->menu_content," | ");
+		$this->menu_sub_content = rtrim($this->menu_sub_content," | ");
 	}
+	
+	function inParentSubMenu($PageCheck){
+		for($x=0;$x<count($this->pages_array);$x++){
+			if( $this->pages_array[$x]->menu_group == $PageCheck && $this->current_app_page == $this->pages_array[$x]->app_page ){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	function getSubMenuName(){
+		for($x=0;$x<count($this->pages_array);$x++){
+			if( $this->pages_array[$x]->app_page == $this->current_app_page){
+				return $this->pages_array[$x]->menu_group;
+			}
+		}
+		return "";
+	}
+	
+	
 	
 	
 	function addContent($strInContent){

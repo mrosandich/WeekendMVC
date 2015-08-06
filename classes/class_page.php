@@ -41,6 +41,7 @@ class cPage {
 	var $menu_always_show 	= 0;	//should this always show regardless of which app your in. A good example is logout.
 	var $menu_title 		= "";
 	var $menu_image 		= "";
+	var $menu_group			= ""; //put in the parent page name
 	
 	var $page_posts 		= 0;
 	var $page_post_to 		= ""; //this is the app_page it's going to when posting
@@ -57,9 +58,9 @@ class cPage {
 	function __construct(	$cDBObject, $SiteConfig, $cUser, 
 							$strPageTitle, $aStrCSS, $aStrJS, 
 							$strAppName, $strAppPage, $iIsPublic, $aStrRoles, 
-							$iIsMenu, $iMenuAlwaysShow,$sMenuTitle, $sMenuItemImage,
-							$iDoesPost,$sPostToAppPage,$iIsJsonCallBack,
-							$sMVCModel,$sMVCVIew,$sMVCController){
+							$iIsMenu="", $iMenuAlwaysShow="",$sMenuTitle="", $sMenuItemImage="",$sMenuGroup="",
+							$iDoesPost=0,$sPostToAppPage="",$iIsJsonCallBack=0,
+							$sMVCModel="",$sMVCVIew="",$sMVCController=""){
 								
 		$this->db 					= $cDBObject;
 		$this->config 				= $SiteConfig;
@@ -78,6 +79,7 @@ class cPage {
 		$this->menu_always_show 	= $iMenuAlwaysShow;	
 		$this->menu_title 			= $sMenuTitle;
 		$this->menu_image 			= $sMenuItemImage;
+		$this->menu_group			= $sMenuGroup;
 		
 		$this->page_posts 			= $iDoesPost;
 		$this->page_post_to 		= $sPostToAppPage; 
@@ -107,7 +109,7 @@ class cPage {
 	function getFormActionHTML(){
 		$temp_form_id= uniqid();
 		$_SESSION['form_model_uid'] = $temp_form_id;
-		return "<form method=\"post\" name=\"{$this->app_name}_{$this->app_page}\" id=\"{$this->app_name}_{$this->app_page}\" action=\"\">\n\t<input type=\"hidden\" name=\"app_page\" value=\"{$this->page_post_to}\">\n\t<input type=\"hidden\" name=\"app_name\" value=\"{$this->app_name}\">\n\t<input type=\"hidden\" name=\"app_action\" value=\"{$this->app_action}\">\n\t<input type=\"hidden\" name=\"form_model_uid\" value=\"$temp_form_id\">\n";
+		return "<form method=\"post\" name=\"{$this->app_name}_{$this->app_page}\" id=\"{$this->app_name}_{$this->app_page}\" action=\"\">\n\t<input type=\"hidden\" name=\"app_page\" value=\"{$this->page_post_to}\">\n\t<input type=\"hidden\" name=\"app_name\" value=\"{$this->app_name}\">\n\t<input type=\"hidden\" name=\"app_action\" value=\"{$this->app_action}\">\n\t<input type=\"hidden\" name=\"form_model_uid\" value=\"$temp_form_id\">\n\t<input type=\"hidden\" name=\"form_model_posted\" value=\"Yes\">\n";
 	}
 } //end cPage
 

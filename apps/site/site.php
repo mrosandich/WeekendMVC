@@ -74,11 +74,26 @@ class site_app extends cAPP{
 	}
 	
 	function profile_update(){
-		
+		return true;
+	}
+	function password(){
+		return true;
+	}
+	function password_update(){
+		return true;
+	}
+	
+	function security(){
+		return true;
+	}
+	function security_update(){
 		return true;
 	}
 	
 	
+	function recoverypassword(){
+		return true;
+	}
 	function index(){
 		$this->addContent( "welcome to the website." );
 		return true;
@@ -90,19 +105,99 @@ class site_app extends cAPP{
 		$aStrJS		= array();
 		
 		//public welcome page
-		//																	  TITLE										app_page   page_public			
-		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,"Welcome", $aStrCSS, $aStrJS,$this->AppName, "index", 		1, 		array()				, 1, 1,"Welcome", 	"",0,""			,0,"","","");
-		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,"helloworld", $aStrCSS, $aStrJS,"helloworld", "index", 		0, 		array("helloworld")	 , 1, 0,"Hello World Home", "",0,""	,0,"","","");
 	
-		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,"Login", 	$aStrCSS, $aStrJS,$this->AppName, "login", 		2, 		array()				, 1, 0,"Login", 	"",1,"login_do"	,0,"","login","login");
-		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,"Login", 	$aStrCSS, $aStrJS,$this->AppName, "login_do", 	2, 		array()				, 0, 0,"Login", 	"",1,""		,0,"","","");
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Welcome", $aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
+											$this->AppName, "index", 1, array(),							//AppName, AppPage, Is Public, Roles
+											1, 1, "Welcome", "", "",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "", 0,														//Does Post, Post To App Page name, Is Json Call Back
+											"", "", "");													//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
-		
-		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,"Logout", 	$aStrCSS, $aStrJS,$this->AppName, "logout", 	0, 		array()				 , 1, 0,"Logout", 	"",0,""		,0,"","logout","logout");
-		
-		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,"Profile", $aStrCSS, $aStrJS,$this->AppName, "profile", 	0, 		array("user_profile"), 1, 0,"Profile", 	"",1,"profile_update"		,0,"","profile","profile");
-		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,"Profile", $aStrCSS, $aStrJS,$this->AppName, "profile_update", 0, 	array("user_profile"), 0, 0,"Profile", 	"",0,"profile_update"		,0,"","profile","profile");
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"helloworld", $aStrCSS, $aStrJS,								//meta title, extra CSS, extra JS									
+											"helloworld", "index", 0, array("helloworld"),					//AppName, AppPage, Is Public, Roles	 
+											1, 0, "Hello World Home", "", "",								//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "", 0,														//Does Post, Post To App Page name, Is Json Call Back
+											"", "", "");													//MVC-Model name, MVC-View Name, MVC-Controller Name
 	
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Login", 	$aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
+											$this->AppName, "login",2, 	array(),							//AppName, AppPage, Is Public, Roles 
+											1, 0,"Login", "", "",											//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, "login_do", 0,												//Does Post, Post To App Page name, Is Json Call Back
+											"", "login", "login");											//MVC-Model name, MVC-View Name, MVC-Controller Name
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Login", 	$aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
+											$this->AppName,"login_do", 2, array(),							//AppName, AppPage, Is Public, Roles 
+											0, 0, "Login", "", "",											//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, "" ,0,														//Does Post, Post To App Page name, Is Json Call Back
+											"", "", "");													//MVC-Model name, MVC-View Name, MVC-Controller Name
+
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Recover Password", 	$aStrCSS, 								//meta title, extra CSS, extra JS
+											$aStrJS,$this->AppName, "recoverypassword", 2, array(),			//AppName, AppPage, Is Public, Roles 
+											0, 0, "Login", "", "",											//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, "recoverypassword_do", 0,									//Does Post, Post To App Page name, Is Json Call Back
+											"", "recoverypassword", "recoverypassword");					//MVC-Model name, MVC-View Name, MVC-Controller Name
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Recover Password", $aStrCSS, $aStrJS,							//meta title, extra CSS, extra JS
+											$this->AppName, "recoverypassword_do", 2, array(),				//AppName, AppPage, Is Public, Roles 
+											0, 0, "Login", "", "",											//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, "recoverypassword_do", 0,									//Does Post, Post To App Page name, Is Json Call Back
+											"", "recoverypassword", "recoverypassword");					//MVC-Model name, MVC-View Name, MVC-Controller Name
+		
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Logout", 	$aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
+											$this->AppName, "logout", 0, array() ,							//AppName, AppPage, Is Public, Roles 
+											1, 0, "Logout", "", "",											//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "", 0,														//Does Post, Post To App Page name, Is Json Call Back
+											"", "logout", "logout");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Profile", $aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
+											$this->AppName, "profile", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
+											1, 0, "Profile", "", "profile",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, "profile_update", 0,											//Does Post, Post To App Page name, Is Json Call Back
+											"", "profile", "profile");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+											
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Profile", $aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
+											$this->AppName, "profile_update", 0, array("user_profile"),		//AppName, AppPage, Is Public, Roles 
+											0, 0, "Profile", "", "profile",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "profile_update"	,0,											//Does Post, Post To App Page name, Is Json Call Back
+											"","profile","profile");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Profile - Password", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
+											$this->AppName, "password", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
+											1, 0, "Password", "", "profile",								//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, "password_update"	,0,										//Does Post, Post To App Page name, Is Json Call Back
+											"","password","password");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Profile - Password", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
+											$this->AppName, "password_update", 0, array("user_profile"),	//AppName, AppPage, Is Public, Roles 
+											0, 0, "Password", "", "profile",								//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, "password_update"	,0,										//Does Post, Post To App Page name, Is Json Call Back
+											"","password","password");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+											
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Profile - Security", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
+											$this->AppName, "security", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
+											1, 0, "Security", "", "profile",								//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "security_update"	,0,										//Does Post, Post To App Page name, Is Json Call Back
+											"","security","security");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Profile - Security", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
+											$this->AppName, "security_update", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
+											0, 0, "Security", "", "profile",								//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "security_update"	,0,										//Does Post, Post To App Page name, Is Json Call Back
+											"","security","security");										//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
 		//Don't delete this line. it sets the active index for the page being rendered.
 		$this->getCurrentPageIndex();

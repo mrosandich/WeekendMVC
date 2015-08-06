@@ -89,12 +89,39 @@ class cForms{
 		$this->boundElements = array();
 	}
 	
+	
+	
+	function setRawPostBind(){
+		//Go through each element that was created and find the corresponding $_POST value. Set that value to the object
+		foreach ($this->boundElements as $key => $val ){
+			if( $val->bind_to_post == true ){
+				$val->form_value = $this->web_helper->getFormValue($val->post_name, $val->form_value_default, $val->post_filter_type);
+			}
+		}
+	}
+	
+	function setCheckRepost(){
+		if( $this->web_helper->didPost() ){
+			 $this->setRawPostBind();
+			
+		}
+	}
+	
+	
+	
+
+	
+	//-----------------------------------------------------------------------------------------------
+	//											Validation.		
+	//-----------------------------------------------------------------------------------------------
+	
 	function bindAndFilter(){
 		$this->setRawPostBind();
 		if( $_SESSION['form_model_uid'] != $this->web_helper->getFormValue("form_model_uid","","AlphaNumeric")){
-			//This means the user is tring to submit a form that already has been submitted.
-			$this->HTMLErrors[$this->web_helper->current_app_page] = "The form has expired or has been already submitted";			
+			//This means the user is trying to submit a form that already has been submitted.
+			$this->HTMLErrors[$this->web_helper->current_app_page] = "The form Has Expired or has been already submitted (Don't refresh your browser).";			
 		}
+		
 		foreach ($this->boundElements as $key => $val ){
 			$val->selfValidate();
 			$selfErrors = $val->HTMLErrors;
@@ -104,60 +131,16 @@ class cForms{
 		}
 		
 		if(count($this->HTMLErrors) > 0){
+			if( $this->HTMLErrors[$this->web_helper->current_app_page] == "" ){
+				$this->HTMLErrors[$this->web_helper->current_app_page] = "Please review the error below and correct them before submitting";
+			}else{
+				$this->HTMLErrors[$this->web_helper->current_app_page] .= "Please review the error below and correct them before submitting.";
+			}
 			return false;
 		}else{
 			return true;
 		}
 	}
-	
-	function setRawPostBind(){
-		//Go through each element that was created and find the corresponding $_POST value. Set that value to the object
-		foreach ($this->boundElements as $key => $val ){
-			$val->form_value = $this->web_helper->getFormValue($val->post_name, $val->form_value_default, $val->post_filter_type);
-		}
-	}
-	
-	
-	
-	function loadSelectTableSingleRow($PKValue){
-		//populate all the values in the form
-		$Statement = "select * from {$this->table_name} where {$this->table_pk_col}='$PKValue' limit 1";
-		$this->db->sql($Statement);
-		$result = $this->db->execute();
-		if( $this->db->getResultCount() > 0 ){
-			foreach ($this->boundElements as $key => $val ){
-				if( $val->is_bound == true || $val->auto_populate_db == true){
-					foreach($result[0] as $item_key => $item_val ){
-						if( $key == $item_key ){
-							$val->form_value =  $item_val;
-						}
-					}
-				}//end if bound true
-			}
-		}
-	}
-	
-	function setFormPostValues(){
-		//The flow is:
-		// If we are doing an edit and have data for the elements we need to populate them
-		//			if thee was an error when they posted we want to repopulate with the form data that they entered so long as the form_model_uid is valid.
-		// If this is a new or blank form then we want to populate them if there is an error and the form_model_uid is valid.
-		
-		
-		//$_SESSION['form_model_uid']
-	
-		if( $this->web_helper->current_app_action == "blankform" ){
-			if( $_SESSION['form_model_uid'] == $this->web_helper->getFormValue("form_model_uid","","AlphaNumeric")){
-				//This is a repost of the form. we have sent the user back here
-				
-			}
-		}
-	}
-	
-	//-----------------------------------------------------------------------------------------------
-	//											Validation.		
-	//-----------------------------------------------------------------------------------------------
-	
 	
 	
 	
@@ -191,6 +174,26 @@ class cForms{
 	//-----------------------------------------------------------------------------------------------
 	//											SQL Interactions.		
 	//-----------------------------------------------------------------------------------------------
+	
+	
+	function dbLoadSelectTableSingleRow($PKValue){
+		//populate all the values in the form
+		$Statement = "select * from {$this->table_name} where {$this->table_pk_col}='$PKValue' limit 1";
+		$this->db->sql($Statement);
+		$result = $this->db->execute();
+		if( $this->db->getResultCount() > 0 ){
+			foreach ($this->boundElements as $key => $val ){
+				if( $val->is_bound == true || $val->auto_populate_db == true){
+					foreach($result[0] as $item_key => $item_val ){
+						if( $key == $item_key ){
+							$val->form_value =  $item_val;
+						}
+					}
+				}//end if bound true
+			}
+		}
+	}
+	
 	
 	function doDatabaseUpdate(){
 		$ColValList = "";

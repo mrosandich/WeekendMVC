@@ -23,6 +23,7 @@
 .message_user{
 	border: solid 1px #666;
 	padding: 10px;
+	margin-top:10px;
 }
 
 .bad{
@@ -35,4 +36,23 @@
 
 .warning{
 	background-color: #FF0;
+}
+
+.menu_link{
+	text-decoration:underline;
+	color: #000;
+}
+
+.menu_link: hover{
+	text-decoration:none;
+	color: #666;
+}
+
+.active{
+	color: #666;
+	text-decoration:none;
+}
+
+.inactive{
+	color: #000;
 }

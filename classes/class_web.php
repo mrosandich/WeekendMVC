@@ -40,6 +40,13 @@ class cWeb {
 		$this->current_app_action 	= $this->getRequestValue("app_action"	,"","SystemPageStates");
 	}
 	
+	function didPost(){
+		if( $this->getFormValue("form_model_posted","") == "Yes" ){
+			return true;
+		}
+		return false;
+	}
+	
 	function getFormValue($Key,$DefaultValue,$RegCleanType=""){
 		$ReturnValue = $DefaultValue;
 
