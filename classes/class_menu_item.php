@@ -20,21 +20,24 @@
 	limitations under the License.
 
 */
-define('SYSLOADED', "Yes Loaded");
-session_start();
-include("config.php");
+defined('SYSLOADED') OR die('No direct access allowed.');
 
-include("classes/class_web.php");
-include("classes/class_db.php");
-include("classes/class_user.php");
-
-include("classes/class_menu_item.php");
-include("classes/class_forms.php");
-include("classes/class_form_element.php");
-
-include("classes/class_app.php");
-include("classes/class_page.php");
-include("classes/class_pageflow.php");
-
-
+class cMenuItem{
+	
+	var $linkurl	= "";
+	var $linktext	= "";
+	var $linkimage	= "";
+	var $linkgroup	= "";
+	var $linkactive	= "";
+	
+	function __construct($strURL,$strText, $strImage, $strGroup, $intActive){
+		
+		$this->linkurl			= $strURL;
+		$this->linktext			= $strText;
+		$this->linkimage		= $strImage;
+		$this->linkgroup		= $strGroup;
+		$this->linkactive		= $intActive;
+	}
+	
+}
 ?>

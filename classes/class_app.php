@@ -27,11 +27,14 @@ class cAPP{
 	var $db;
 	var $config;
 	var $user;
-	var $AppName 				= "";
-	var $AppTemplate 			= "";
-	var $page_content			= "";
-	var $menu_content			= "";
-	var $menu_sub_content 		= "";
+	var $AppName 					= "";
+	var $AppTemplate 				= "";
+	var $page_content				= "";
+	var $menu_content				= ""; 		// a blob of html for a quick easy render of the main menu
+	var $menu_sub_content 			= ""; 		// a blob of html for a quick easy render of the sub menu
+	var $menu_items_template		= array();  //use this if you want to generate you menu in your template properties: linktext, linkurl, linkimage, linkactive
+	var $menu_sub_items_template	= array();  //use this if you want to generate you menu in your template properties: linktext, linkurl, linkimage, linkactive
+	
 	var $current_pages_index 	= -1;
 	
 	//this stores all the information about the pages in the app
@@ -100,15 +103,19 @@ class cAPP{
 					if($this->pages_array[$x]->is_public == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1 ){
 						//menu item is public, always show
 						$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
+						$this->menu_items_template[] = $this->createMenuItem($this->pages_array[$x],$isActive);
 						if( $this->pages_array[$x]->menu_group == $this->pages_array[$x]->app_page && $this->getSubMenuName() == $this->pages_array[$x]->menu_group){
 							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+							$this->menu_sub_items_template[] =  $this->createMenuItem($this->pages_array[$x],$isActive);
 						}
 					}
 					if($this->pages_array[$x]->is_public == 0 && $this->user->isLoggedIn() == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
 						//menu item is logged in only
 						$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
+						$this->menu_items_template[] = $this->createMenuItem($this->pages_array[$x],$isActive);
 						if( $this->pages_array[$x]->menu_group == $this->pages_array[$x]->app_page && $this->getSubMenuName() == $this->pages_array[$x]->menu_group){
 							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+							$this->menu_sub_items_template[] = $this->createMenuItem($this->pages_array[$x],$isActive);
 						}
 					}
 					
@@ -116,8 +123,10 @@ class cAPP{
 						//menu item is logged out only but not public.
 						//Example - you wouldn't show the login menu if your already logged in.
 						$this->menu_content .= $this->pages_array[$x]->getURLLink($isActive) . " | ";
+						$this->menu_items_template[] = $this->createMenuItem($this->pages_array[$x],$isActive);
 						if( $this->pages_array[$x]->menu_group == $this->pages_array[$x]->app_page && $this->getSubMenuName() == $this->pages_array[$x]->menu_group){
 							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+							$this->menu_sub_items_template[] = $this->createMenuItem($this->pages_array[$x],$isActive);
 						}
 					}
 				}else{//end menu_group
@@ -129,16 +138,19 @@ class cAPP{
 						if($this->pages_array[$x]->is_public == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1 ){
 							//menu item is public, always show
 							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+							$this->menu_sub_items_template[] = $this->createMenuItem($this->pages_array[$x],$isActiveSub);
 						}
 						if($this->pages_array[$x]->is_public == 0 && $this->user->isLoggedIn() == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
 							//menu item is logged in only
 							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+							$this->menu_sub_items_template[] = $this->createMenuItem($this->pages_array[$x],$isActiveSub);
 						}
 						
 						if($this->pages_array[$x]->is_public == 2 && $this->user->isLoggedIn() == 0 && $this->compareRoles($this->pages_array[$x]->required_roles)==1){
 							//menu item is logged out only but not public.
 							//Example - you wouldn't show the login menu if your already logged in.
 							$this->menu_sub_content .= $this->pages_array[$x]->getURLLink($isActiveSub) . " | ";
+							$this->menu_sub_items_template[] = $this->createMenuItem($this->pages_array[$x],$isActiveSub);
 						}
 					}
 				}//end else menu_group
@@ -166,7 +178,9 @@ class cAPP{
 		return "";
 	}
 	
-	
+	function createMenuItem($PageObject,$isActive){
+		return new cMenuItem($PageObject-> getURL(),$PageObject->menu_title, $PageObject->menu_image, $PageObject->menu_group, $isActiveSub);				
+	}
 	
 	
 	function addContent($strInContent){

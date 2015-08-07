@@ -2,5 +2,6 @@
 <p>
 <?php
 echo $this->renderForm();
+
 ?>
 </p>

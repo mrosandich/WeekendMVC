@@ -14,12 +14,28 @@
 <body>
 <div id="page">
 <div id="topmenu">
-<?php echo $this->menu_content . "\n"; ?>
+<?php 
+	//sample using the html blob. see below in the submenu for using the array
+	echo $this->menu_content . "\n"; 
+?>
 </div><!-- end id:topmenu -->
 <?php
-	if( $this->menu_sub_content != "" ){
+	if( count($this->menu_sub_items_template) > 0 ){
+		
 		echo "<div id=\"submenu\">\n";
-		echo $this->menu_sub_content;
+		for($x=0;$x<count($this->menu_sub_items_template);$x++){
+			$menuactstate = "inactive";
+			if( $this->menu_sub_items_template[$x]->linkactive == "1"){
+				$menuactstate = "active";
+			}
+			echo "<a class=\"menu_link $menuactstate\" href=\"{$this->menu_sub_items_template[$x]->linkurl}\" />";
+			echo $this->menu_sub_items_template[$x]->linktext;
+			echo "</a>";
+			if( ($x+1) < count($this->menu_sub_items_template) ){
+				echo "&nbsp;|&nbsp;";
+			}
+			
+		}
 		echo "</div><!-- end id:submenu -->\n";
 	}
 
