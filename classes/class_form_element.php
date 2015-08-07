@@ -24,6 +24,7 @@ defined('SYSLOADED') OR die('No direct access allowed.');
 
 class cFormElement{
 	
+	var $db			= ""; //optional add on for validation that uses the database
 	var $col_name 	= "";
 	var $post_name 	= "";
 	var $roles		= array();
@@ -147,17 +148,66 @@ class cFormElement{
 	//											Validation.		
 	//-----------------------------------------------------------------------------------------------
 	
+	//check that thee is a value
 	function notEmpty($arrayParams){
 		if( $this->form_value == "" ){
-			$this->HTMLErrors[] = array($this->col_name => $this->form_label . " can't be blank");
+			$this->HTMLErrors[] = array($this->col_name =>  " can't be blank. ");
 		}
 	}
 	
+	//check to see if it is a valid email address
 	function isEmail($arrayParams){
 		if (!filter_var($this->form_value, FILTER_VALIDATE_EMAIL) === false) {
 			//valid email
 		} else {
-			$this->HTMLErrors[] = array($this->col_name => $this->form_label . " is not a valid email address");
+			$this->HTMLErrors[] = array($this->col_name => " is not a valid email address. ");
+		}
+	}
+	
+	//this function check to see if another form elemnts has the same value. usecase: confirm password
+	//this form assumes the same type of filtering and validation.
+	function otherFormElementSameValue($arrayParams){
+		if( !array_key_exists('formname',$arrayParams) || !array_key_exists('formlabel',$arrayParams)     ){
+			if(DEBUG_ECHO == true){
+				echo "called class-form_element otherFormElementSameValue: missing formname ";
+			}
+			return false;
+		}
+		$temp_cweb 		= new cWeb();
+		$temp_value 	= $temp_cweb->getFormValue($arrayParams['formname'],"", $post_filter_type);
+		if( $this->form_value != $temp_value ){
+			$temp_verb = "";
+			if( $this->form_label == $arrayParams['formlabel'] ){
+				$temp_verb = "other ";
+			}
+			$this->HTMLErrors[] = array($this->col_name =>  " needs to match " . $temp_verb . $arrayParams['formlabel'] . ". ");
+		}
+	}
+	
+	
+	
+	//check to see if a value is in a certain table.col
+	function valueNotInDBTable($arrayParams){
+		if( !array_key_exists('table',$arrayParams) || !array_key_exists('col',$arrayParams) ){
+			if(DEBUG_ECHO == true){
+				echo "called class-form_element valueNotInDBTable: missing arrayparams table or col";
+			}
+			return false;
+		}
+		if( $this->db == "" ){
+			if(DEBUG_ECHO == true){
+				echo "called class-form_element valueNotInDBTable: you need to set the ->db from the parent to use this validation call";
+			}
+			return false;
+		}
+		
+		$Statement = "select * from {$arrayParams['table']} where {$arrayParams['col']}=:formvalue";
+		$this->db->sql($Statement);
+		$this->db->addParam(":formvalue" ,$this->form_value);
+		$result = $this->db->execute();
+		$RecordsReturned = $this->db->getResultCount();
+		if( $RecordsReturned > 0 ){
+			$this->HTMLErrors[] = array($this->col_name => " is already taken. Please choose another. ");
 		}
 	}
 }

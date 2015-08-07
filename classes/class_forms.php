@@ -40,7 +40,7 @@ class cForms{
 	
 	//this describes how the elements of the for will be displayed. Could be a TR row, or a span, or divs. You can override each element as well.
 	//replaces items within the string on output [id],[labelname],[formelement]
-	var $HTMLOutFormat		= "<fieldset id=\"fs_[id]\">\n\t<label>[labelname]</label>\n\t[formelement]\n[formcaption][errormsg]</fieldset>"; 
+	var $HTMLOutFormat		= "<fieldset id=\"fs_[id]\">\n\t<label>[labelname]</label>\n\t[formelement]\n[formcaption]<span class=\"errortext\">[errormsg]</span></fieldset>"; 
 	var $HTMLFormStart		= "";
 	var $HTMLFormEnd		= "</form>";
 	var $HTMLErrors			= array();
@@ -157,6 +157,14 @@ class cForms{
 	}
 	
 	function renderFormItem($KeyName){
+		if(DEBUG_ECHO == true){
+			if( !array_key_exists($KeyName,$this->boundElements) ){
+				echo "Trying to render a form element that was setup correctly - Element doesn't exists:" . $KeyName ;
+			}
+			if( !method_exists($this->boundElements[$KeyName],'renderElement') ){
+				echo "Trying to render a form element that was setup correctly - missing renderElement:" . $KeyName ;
+			}
+		}
 		$form_element_html = $this->boundElements[$KeyName]->renderElement();
 			if( $this->boundElements[$KeyName]->is_visible ){
 				$current_element = str_replace('[formelement]',$form_element_html,$this->HTMLOutFormat);
@@ -223,15 +231,22 @@ class cForms{
 		$ColValues = "";
 		foreach ($this->boundElements as $key => $val ){
 			//check roles
-			$ColValues 	.= ":" . $val->form_value . ",";
-			$ColList 	.= $val->col_name . ",";
-			$this->db->addParam(":" . $val->col_name ,$val->form_value);
+			if( $val->col_name !=  $this->table_pk_col && $val->is_bound == true ){
+				$ColValues 	.= ":" . $val->form_value . ",";
+				$ColList 	.= $val->col_name . ",";
+			}
 		}
-		
 		$ColValues 	= rtrim($ColValues,",");
 		$ColList 	= rtrim($ColList,",");
 		$SQLStatment =  "insert into " . $this->table_name. "(" . $ColList . ")values(" . $ColValues . ")";
 		$this->db->sql($SQLStatment);
+		
+		foreach ($this->boundElements as $key => $val ){
+			//check roles
+			if( $val->is_bound == true ){
+				$this->db->addParam(":" . $val->col_name ,$val->form_value);
+			}
+		}
 		return $this->db->execute();
 	}
 	

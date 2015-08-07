@@ -34,9 +34,13 @@ $CONFIG['db_username']	= 'someusername';
 $CONFIG['db_password'] 	= 'anotherpassword';
 
 
+
+
 //-----------------------------------------------------------------
 //							CONFIG PATHS
 //-----------------------------------------------------------------
+
+
 
 
 
@@ -45,6 +49,9 @@ $CONFIG['db_password'] 	= 'anotherpassword';
 //-----------------------------------------------------------------
 $CONFIG['security_max_fails_before_lock'] = 20;
 $CONFIG['security_max_fails_lock_message'] = "You account was locked due to too many failed logins";
+
+
+
 
 
 //-----------------------------------------------------------------
@@ -56,6 +63,24 @@ $CONFIG['app_default_page'] 	= "index"; //go to a certain page within the app
 
 
 
+
+
+//-----------------------------------------------------------------
+//								New User Registration
+//-----------------------------------------------------------------
+
+//user_email, enterprise_manager, site_aministrator, none 
+//user_meail=user clicks link in email
+//enterprise_manager=someone in that enterprise approves has approve user roles
+//site_aministrator=The site admin approves
+//none=user is approved at the time of creation. use recaptcha or app_site_register_require_enterprise_code to prevent bots from signing up.
+
+$CONFIG['app_site_register_user_activation_method'] 		= 0; 
+$CONFIG['app_site_register_require_enterprise_code'] 		= 0; //make the user enter the enterprise code
+
+$CONFIG['app_site_register_require_recaptcha'] 				= 0; //0=off, 1=on.  if 1 go to https://www.google.com/recaptcha/admin#list to get your keys
+$CONFIG['app_site_register_require_recaptcha_site_key'] 	= ''; 
+$CONFIG['app_site_register_require_recaptcha_secret_key']	= ''; 
 
 
 

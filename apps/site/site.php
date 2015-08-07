@@ -99,6 +99,15 @@ class site_app extends cAPP{
 		return true;
 	}
 	
+	function register(){
+		return true;
+	}
+	
+	function register_do(){
+		return true;
+	}
+	
+	
 	function loadAppPages(){
 		
 		$aStrCSS 	= array();
@@ -157,6 +166,7 @@ class site_app extends cAPP{
 											0, "", 0,														//Does Post, Post To App Page name, Is Json Call Back
 											"", "logout", "logout");										//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
+		//Profile Page
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
 											"Profile", $aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
 											$this->AppName, "profile", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
@@ -171,6 +181,7 @@ class site_app extends cAPP{
 											0, "profile_update"	,0,											//Does Post, Post To App Page name, Is Json Call Back
 											"","profile","profile");										//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
+		//Profile Password Page	
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
 											"Profile - Password", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
 											$this->AppName, "password", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
@@ -184,20 +195,26 @@ class site_app extends cAPP{
 											0, 0, "Password", "", "profile",								//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
 											1, "password_update"	,0,										//Does Post, Post To App Page name, Is Json Call Back
 											"","password","password");										//MVC-Model name, MVC-View Name, MVC-Controller Name
-											
+		
+		//Register User		
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
-											"Profile - Security", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
-											$this->AppName, "security", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
-											1, 0, "Security", "", "profile",								//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
-											0, "security_update"	,0,										//Does Post, Post To App Page name, Is Json Call Back
-											"","security","security");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+											"Register", $aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
+											$this->AppName, "register", 2, array(),							//AppName, AppPage, Is Public, Roles 
+											1, 0, "Register", "", "",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "register_do"	,0,											//Does Post, Post To App Page name, Is Json Call Back
+											"","register","register");										//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
-											"Profile - Security", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
-											$this->AppName, "security_update", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
-											0, 0, "Security", "", "profile",								//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
-											0, "security_update"	,0,										//Does Post, Post To App Page name, Is Json Call Back
-											"","security","security");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+											"Register", $aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
+											$this->AppName, "register_do", 2, array(),						//AppName, AppPage, Is Public, Roles 
+											0, 0, "Register", "", "",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "register_do"	,0,											//Does Post, Post To App Page name, Is Json Call Back
+											"","register","register");										//MVC-Model name, MVC-View Name, MVC-Controller Name
+
+											
+											
+											
+		
 		
 		//Don't delete this line. it sets the active index for the page being rendered.
 		$this->getCurrentPageIndex();

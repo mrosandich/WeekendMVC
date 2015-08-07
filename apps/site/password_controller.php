@@ -52,8 +52,8 @@ if( $this->web_helper->current_app_page== "password" ){
 
 	//set html parts for this col
 	$this->siteForms->boundElements['pass2']->form_web_type = "password";
-	$this->siteForms->boundElements['pass2']->form_label	 = "Confirm Password";
-	$this->siteForms->boundElements['pass2']->form_caption	 = "";
+	$this->siteForms->boundElements['pass2']->form_label	 = "Password";
+	$this->siteForms->boundElements['pass2']->form_caption	 = "<br />Retype password to confirm.";
 	
 
 	$this->siteForms->boundElements['save_btn']->form_web_type = "submit";

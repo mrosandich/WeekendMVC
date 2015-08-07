@@ -56,3 +56,7 @@
 .inactive{
 	color: #000;
 }
+
+.errortext{
+	color: #F00;
+}

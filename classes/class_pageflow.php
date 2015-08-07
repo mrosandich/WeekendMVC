@@ -129,11 +129,15 @@ class cPageFlow {
 						}elseif( $temp_continue_rendering !== false ){
 							$this->callMVC($temp_continue_rendering,$CurrentAppClass);
 						}else{
-							echo "Your app function needs to return true|false|or function name to call";
+							if(DEBUG_ECHO == true){
+								echo "Your app function needs to return true|false|or function name to call";
+							}
 						}
 							
 					}else{
-						echo "$temp_function() doesn't exsist in apps/" . $this->current_app . "/" . $this->current_app . ".php";
+						if(DEBUG_ECHO == true){
+							echo "$temp_function() doesn't exsist in apps/" . $this->current_app . "/" . $this->current_app . ".php";
+						}
 					}
 				}else{
 					$CurrentAppClass->page_content = "There is no access to that at this time.";
@@ -141,9 +145,9 @@ class cPageFlow {
 					$CurrentAppClass->loadRenderTemplate();
 				}
 					
-			}else{echo "class was not able to load";}
+			}else{if(DEBUG_ECHO == true){echo "class was not able to load";}}
 		
-		}else{echo "class app file doesn't exist";}
+		}else{if(DEBUG_ECHO == true){echo "class app file doesn't exist";}}
 	}//end construct
 	
 	function callMVC($strPageName,$CurrentAppClass){
@@ -157,7 +161,9 @@ class cPageFlow {
 				$CurrentAppClass->loadMenuHTML();
 				$CurrentAppClass->loadRenderTemplate();
 			}else{
-				echo "$temp_function() doesn't exsist in apps/" . $this->current_app . "/" . $this->current_app . ".php";
+				if(DEBUG_ECHO == true){
+					echo "$temp_function() doesn't exsist in apps/" . $this->current_app . "/" . $this->current_app . ".php";
+				}
 			}
 		}else{
 			$CurrentAppClass->page_content = "There is no access to that at this time.";

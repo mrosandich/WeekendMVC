@@ -38,9 +38,9 @@ class cAPP{
 	var $current_pages_index 	= -1;
 	
 	//this stores all the information about the pages in the app
-	var $pages_array 		= array();
-	var $current_app_name 	= "";
-	var $current_app_page 	= "";
+	var $pages_array 			= array();
+	var $current_app_name 		= "";
+	var $current_app_page 		= "";
 	
 	var $app_user_message 		= "";
 	var $app_user_message_type 	= ""; //good,bad,warning or what ever you want to use
