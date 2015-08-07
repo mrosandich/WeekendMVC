@@ -164,12 +164,61 @@ class cFormElement{
 		}
 	}
 	
+	
+	function isValidPassword($arrayParams){
+		if( !array_key_exists('len',$arrayParams) || !array_key_exists('cntup',$arrayParams) || !array_key_exists('cntlw',$arrayParams) || !array_key_exists('cntspc',$arrayParams) || !array_key_exists('spchar',$arrayParams)  || !array_key_exists('cntnum',$arrayParams)  ){
+			if(DEBUG_ECHO == true){
+				echo "called class-form_element isValidPassword: missing one or more: len, cntup, cntlw, cntspc, cntnum, spchar ";
+			}
+			return false;
+		}
+		
+		if( strlen($this->form_value) < $arrayParams['len'] ){
+			$this->HTMLErrors[] = array($this->col_name =>  " is too short. Min length required is " . $arrayParams['len'] );
+		}
+		
+		$match = "";
+		preg_match_all('/[A-Z]/', $this->form_value, $match);
+		$total_ucase = count($match[0]);
+		
+		$match = "";
+		preg_match_all('/[a-z]/', $this->form_value, $match);
+		$total_lcase = count($match[0]);
+		
+		$match = "";
+		preg_match_all('/[0-9]/', $this->form_value, $match);
+		$total_numbers = count($match[0]);
+		
+		if( $total_ucase < $arrayParams['cntup'] ){
+			$this->HTMLErrors[] = array($this->col_name =>  " needs at least " . $arrayParams['cntup'] . " upper case letters. " );
+		}
+		
+		if( $total_lcase < $arrayParams['cntlw'] ){
+			$this->HTMLErrors[] = array($this->col_name =>  " needs at least " . $arrayParams['cntlw'] . " lower case letters. " );
+		}
+		
+		if( $total_numbers < $arrayParams['cntnum'] ){
+			$this->HTMLErrors[] = array($this->col_name =>  " needs at least " . $arrayParams['cntnum'] . " numbers. " );
+		}
+		
+		$total_special=0;
+		for($x=0;$x <  strlen($this->form_value);$x++){
+			$currentchar = substr($this->form_value,$x,1);
+			$total_special += substr_count( $arrayParams['spchar'],$currentchar);
+		}
+		
+		if( $total_special < $arrayParams['cntspc'] ){
+			$this->HTMLErrors[] = array($this->col_name =>  " needs at least " . $arrayParams['cntspc'] . " special characters:" . $arrayParams['spchar'] );
+		}
+		
+	}
+	
 	//this function check to see if another form elemnts has the same value. usecase: confirm password
 	//this form assumes the same type of filtering and validation.
 	function otherFormElementSameValue($arrayParams){
 		if( !array_key_exists('formname',$arrayParams) || !array_key_exists('formlabel',$arrayParams)     ){
 			if(DEBUG_ECHO == true){
-				echo "called class-form_element otherFormElementSameValue: missing formname ";
+				echo "called class-form_element otherFormElementSameValue: missing formname or formlabel ";
 			}
 			return false;
 		}

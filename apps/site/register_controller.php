@@ -10,6 +10,18 @@ $this->siteForms->createElement('password',true,'',"", "Password");
 $this->siteForms->boundElements['password']->auto_populate_db = false;
 $this->siteForms->boundElements['password']->auto_populate_post = false;
 $this->siteForms->boundElements['password']->addValidation('notEmpty',array());
+$this->siteForms->boundElements['password']->addValidation('isValidPassword',
+											array(
+												'len' => $this->config['security_password_min_length'] , 
+												'cntup' => $this->config['security_password_required_uppercase'], 
+												'cntlw' => $this->config['security_password_required_lowercase'], 
+												'cntspc' => $this->config['security_password_required_specialcharacters'], 
+												'cntnum' => $this->config['security_password_required_numbers'], 
+												'spchar' => $this->config['security_password_specialcharacters']
+											)
+											);
+
+
 
 $this->siteForms->createElement('pass2',false,'',"", "Password");
 $this->siteForms->boundElements['pass2']->auto_populate_db = false;
@@ -63,7 +75,7 @@ if( $this->web_helper->current_app_page== "register_do" ){
 	
 	
 	if( $GoodData == true ){
-		//$Result = $this->siteForms->doSQLInsert();
+		$Result = $this->siteForms->doSQLInsert();
 		$this->app_user_message = "Account Created";
 		$this->app_user_message_type = "good";
 		$this->user->getActiveUserFromDB();
