@@ -50,11 +50,15 @@ $CONFIG['db_password'] 	= 'anotherpassword';
 $CONFIG['security_max_fails_before_lock'] 		= 20;
 $CONFIG['security_max_fails_lock_message'] 		= "You account was locked due to too many failed logins";
 
-$CONFIG['security_password_min_length'] 				= 10;
+
+$CONFIG['security_user_allowed_name_characters']		= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-0123456789';
+$CONFIG['security_user_allowed_name_min_length']		= 6;
+
+$CONFIG['security_password_min_length'] 				= 8;
 $CONFIG['security_password_required_numbers'] 			= 1; //how many numbers need to be in the password
 $CONFIG['security_password_required_uppercase'] 		= 1; //how many uppercase need to be in the password
 $CONFIG['security_password_required_lowercase'] 		= 1; //how many lowercase need to be in the password
-$CONFIG['security_password_required_specialcharacters'] = 0; //how many special charters need to be in the password
+$CONFIG['security_password_required_specialcharacters'] = 1; //how many special charters need to be in the password
 $CONFIG['security_password_specialcharacters'] 			= '!@#$%^&*()_+-={}[]|:;"<>,.?/'; //set the password special characters
 
 

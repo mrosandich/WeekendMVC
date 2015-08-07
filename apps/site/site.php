@@ -106,6 +106,10 @@ class site_app extends cAPP{
 	function register_do(){
 		return true;
 	}
+	function register_complete(){
+		return true;
+	}
+	
 	
 	
 	function loadAppPages(){
@@ -210,7 +214,13 @@ class site_app extends cAPP{
 											0, 0, "Register", "", "",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
 											0, "register_do"	,0,											//Does Post, Post To App Page name, Is Json Call Back
 											"","register","register");										//MVC-Model name, MVC-View Name, MVC-Controller Name
-
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Register - Complete", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
+											$this->AppName, "register_complete", 2, array(),				//AppName, AppPage, Is Public, Roles 
+											0, 0, "Register", "", "",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "register_complete"	,0,										//Does Post, Post To App Page name, Is Json Call Back
+											"","register_complete","register_complete");					//MVC-Model name, MVC-View Name, MVC-Controller Name
 											
 											
 											

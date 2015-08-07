@@ -92,7 +92,7 @@ class cWeb {
 		}
 		
 		if( $RegCleanType == "UserName" ){
-			$InValue = preg_replace("/[^a-zA-Z0-9]/", "", $InValue);
+			//$InValue = preg_replace("/[^a-zA-Z0-9]/", "", $InValue);
 		}
 		
 		if( $RegCleanType == "Email" ){

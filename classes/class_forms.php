@@ -232,7 +232,7 @@ class cForms{
 		foreach ($this->boundElements as $key => $val ){
 			//check roles
 			if( $val->col_name !=  $this->table_pk_col && $val->is_bound == true ){
-				$ColValues 	.= ":" . $val->form_value . ",";
+				$ColValues 	.= ":" . $val->col_name . ",";
 				$ColList 	.= $val->col_name . ",";
 			}
 		}
@@ -240,11 +240,13 @@ class cForms{
 		$ColList 	= rtrim($ColList,",");
 		$SQLStatment =  "insert into " . $this->table_name. "(" . $ColList . ")values(" . $ColValues . ")";
 		$this->db->sql($SQLStatment);
+		echo $SQLStatment;
 		
 		foreach ($this->boundElements as $key => $val ){
 			//check roles
 			if( $val->is_bound == true ){
 				$this->db->addParam(":" . $val->col_name ,$val->form_value);
+				echo "<br />setting:  {$val->col_name} ={$val->form_value}";
 			}
 		}
 		return $this->db->execute();

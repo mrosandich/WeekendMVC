@@ -213,6 +213,36 @@ class cFormElement{
 		
 	}
 	
+	
+	
+	function isValidUserName($arrayParams){
+		if( !array_key_exists('userchars',$arrayParams) || !array_key_exists('userlen',$arrayParams)  ){
+			if(DEBUG_ECHO == true){
+				echo "called class-form_element isValidUserName: missing one or more: userchars, userlen";
+			}
+			return false;
+		}
+		
+		if( strlen($this->form_value) < $arrayParams['userlen'] ){
+			$this->HTMLErrors[] = array($this->col_name =>  " is too short. Min length required is " . $arrayParams['userlen'] );
+		}
+	
+		$char_not_allowed_found="";
+		for($x=0;$x <  strlen($this->form_value);$x++){
+			$currentchar = substr($this->form_value,$x,1);
+			if( substr_count( $arrayParams['userchars'],$currentchar) == 0 ){
+				$char_not_allowed_found .= $currentchar . ", ";
+			}
+		}
+		$char_not_allowed_found = rtrim($char_not_allowed_found,", ");
+		if( $char_not_allowed_found != ""){
+			$this->HTMLErrors[] = array($this->col_name =>  " you can't use " .$char_not_allowed_found . " in your username."  );
+		}
+		
+	}
+	
+	
+	
 	//this function check to see if another form elemnts has the same value. usecase: confirm password
 	//this form assumes the same type of filtering and validation.
 	function otherFormElementSameValue($arrayParams){
@@ -257,6 +287,30 @@ class cFormElement{
 		$RecordsReturned = $this->db->getResultCount();
 		if( $RecordsReturned > 0 ){
 			$this->HTMLErrors[] = array($this->col_name => " is already taken. Please choose another. ");
+		}
+	}
+	
+	function valueIsInDBTable($arrayParams){
+		if( !array_key_exists('table',$arrayParams) || !array_key_exists('col',$arrayParams) ){
+			if(DEBUG_ECHO == true){
+				echo "called class-form_element valueNotInDBTable: missing arrayparams table or col";
+			}
+			return false;
+		}
+		if( $this->db == "" ){
+			if(DEBUG_ECHO == true){
+				echo "called class-form_element valueNotInDBTable: you need to set the ->db from the parent to use this validation call";
+			}
+			return false;
+		}
+		
+		$Statement = "select * from {$arrayParams['table']} where {$arrayParams['col']}=:formvalue";
+		$this->db->sql($Statement);
+		$this->db->addParam(":formvalue" ,$this->form_value);
+		$result = $this->db->execute();
+		$RecordsReturned = $this->db->getResultCount();
+		if( $RecordsReturned < 1 ){
+			$this->HTMLErrors[] = array($this->col_name => " not valid. ");
 		}
 	}
 }
