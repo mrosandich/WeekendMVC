@@ -94,11 +94,32 @@ if( $this->web_helper->current_app_page== "register_do" ){
 	}
 	
 	
-	if( $GoodData == true ){
-		
-		
-		
+	if( $GoodData == true ){	
 		$Result = $this->siteForms->doSQLInsert();
+		//we  need the new user id to add roles and enterprises
+		
+		//if the user is good we need to see if the activation method is none
+		if($this->config['app_site_register_user_activation_method']=='none'){
+			$newuserid = $this->siteForms->db->getLastInsertId();
+			if($newuserid>0){
+				if(count($this->config['app_site_user_activate_roles'])>0){
+					$this->user->modifyRoles($newuserid,"defaults");
+				}
+				if(count($this->config['app_site_user_activate_roles'])>0){
+					$this->user->modifyEnterprises($newuserid,"defaults");
+				}
+			}
+		}elseif($this->config['app_site_register_user_activation_method']=='user_email'){
+			
+		}elseif($this->config['app_site_register_user_activation_method']=='enterprise_manager'){
+			
+		}elseif($this->config['app_site_register_user_activation_method']=='site_aministrator'){
+			
+		}else{
+			//shouldn't have made it here
+		}
+		
+		
 		$this->app_user_message = "Account Created";
 		$this->app_user_message_type = "good";
 		$this->user->getActiveUserFromDB();

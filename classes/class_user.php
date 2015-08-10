@@ -210,6 +210,143 @@ class cUser {
 		$this->db->execute();
 	}
 	
+	function modifyRoles($userIdOverride="",$action,$roles=array()){
+			//action add, delete, reload, clear, defaults
+			//	add			= add roles to user
+			//	delete		= delete roles from user
+			//	reload		= deletes all roles and then readd from in array $roles
+			//	clear 		= delete all roles
+			//	defaults 	= delete all roles then readd defaults
+			
+			$temp_userid = $this->user_id;
+			if($userIdOverride!=""){
+				$temp_userid = $userIdOverride;
+			}
+			
+			$SQLStatement = "";
+			
+			if($action == "clear"){
+				$this->clearRoles($temp_userid);
+			}
+			
+			if($action == "add"){
+				$this->addRoles($temp_userid,$roles);
+			}
+			
+			if($action == "reload"){
+				$this->clearRoles($temp_userid);
+				$this->addRoles($temp_userid,$roles);
+			}
+			
+			if($action == "defaults"){
+				$this->clearRoles($temp_userid);
+				$this->addRoles($temp_userid,$this->config['app_site_user_activate_roles']);
+			}
+			if($action == "delete"){
+				$this->deleteRoles($temp_userid,$roles);
+			}
+			
+	}
+	
+	function addRoles($temp_userid,$roles){
+		
+		for($x=0;$x<count($roles);$x++){
+			$SQLStatement = "insert into roles_users (role_id,user_id) values(:role_id,:user_id)";
+			$this->db->sql($SQLStatement);
+			$this->db->addParam(":user_id",$temp_userid);
+			$this->db->addParam(":role_id",$roles[$x]);
+			$this->db->execute();
+		}
+	}
+	
+	function deleteRoles($temp_userid,$roles){
+		for($x=0;$x<count($roles);$x++){
+			$SQLStatement = "delete from roles_users where role_id=:role_id and user_id=user_id)";
+			$this->db->sql($SQLStatement);
+			$this->db->addParam(":user_id",$temp_userid);
+			$this->db->addParam(":role_id",$roles[$x]);
+			$this->db->execute();
+		}
+	}
+	
+	function clearRoles($temp_userid){
+		$SQLStatement = "delete from roles_users where user_id=:user_id";
+		$this->db->sql($SQLStatement);
+		$this->db->addParam(":user_id",$temp_userid);
+		$this->db->execute();
+	}
+	
+	
+	
+	
+	function modifyEnterprises($userIdOverride="",$action,$enterprises=array()){
+			//action add, delete, reload, clear, defaults
+			//	add			= add enterprise to user
+			//	delete		= delete enterprise from user
+			//	reload		= delete all enterprise and then readd from in array $roles
+			//	clear 		= delete all enterprise
+			//	defaults 	= delete all enterprise then readd defaults
+			
+			$temp_userid = $this->user_id;
+			if($userIdOverride!=""){
+				$temp_userid = $userIdOverride;
+			}
+			
+			$SQLStatement = "";
+			
+			if($action == "clear"){
+				$this->clearEnterprise($temp_userid);
+			}
+			
+			if($action == "add"){
+				$this->addEnterprise($temp_userid,$enterprises);
+			}
+			
+			if($action == "reload"){
+				$this->clearEnterprise($temp_userid);
+				$this->addEnterprise($temp_userid,$enterprises);
+			}
+			
+			if($action == "defaults"){
+				$this->clearEnterprise($temp_userid);
+				$this->addEnterprise($temp_userid,$this->config['app_site_user_activate_enterprise']);
+			}
+			if($action == "delete"){
+				$this->deleteEnterprise($temp_userid,$enterprises);
+			}
+			
+	}
+	
+	function addEnterprise($temp_userid,$EntArray){
+		for($x=0;$x<count($EntArray);$x++){
+			$SQLStatement = "insert into user_to_enterprise (ent_id,user_id) values(:ent_id,:user_id)";
+			$this->db->sql($SQLStatement);
+			$this->db->addParam(":user_id",$temp_userid);
+			$this->db->addParam(":ent_id",$EntArray[$x]);
+			$this->db->execute();
+		}
+	}
+	
+	function deleteEnterprise($temp_userid,$EntArray){
+		for($x=0;$x<count($EntArray);$x++){
+			$SQLStatement = "delete from user_to_enterprise where ent_id=:ent_id and user_id=user_id)";
+			$this->db->sql($SQLStatement);
+			$this->db->addParam(":user_id",$temp_userid);
+			$this->db->addParam(":ent_id",$EntArray[$x]);
+			$this->db->execute();
+		}
+	}
+	
+	function clearEnterprise($temp_userid){
+		$SQLStatement = "delete from user_to_enterprise where user_id=:user_id";
+		$this->db->sql($SQLStatement);
+		$this->db->addParam(":user_id",$temp_userid);
+		$this->db->execute();
+	}
+	
+	
+	
+	
 	function addLDAPUser($user_username, $user_password, $user_email, $user_namelast, $user_namefirst,$app_auto_user_activate){
 		
 		//check if user is in table

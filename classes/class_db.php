@@ -67,7 +67,7 @@ class cDB {
 			}
 		}else{
 			if(DEBUG_ECHO == true){
-				echo "class_db - SQL param name not found in SQL: $InName";
+				echo "class_db - SQL param name not found in SQL: $InName" . ", in sql:" . $this->pre_sql . "<br />";
 			}
 		}
 	}
@@ -84,6 +84,8 @@ class cDB {
 		if( gettype($this->results) == "integer" ){  
 			$this->affected_rows = $this->results;
 		}
+		
+		//clear statement and params
 		return $this->results;
 	}
 	

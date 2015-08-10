@@ -37,8 +37,10 @@ $CONFIG['db_password'] 	= 'anotherpassword';
 
 
 //-----------------------------------------------------------------
-//							CONFIG PATHS
+//							CONFIG GENERAL
 //-----------------------------------------------------------------
+$CONFIG['website_name'] 		= "your site name";
+$CONFIG['website_url_base'] 	= "http://somewebsiteyouhave.com"; // just the url nothing else follows: something like: http://www.yoursite8833.com/
 
 
 
@@ -92,6 +94,21 @@ $CONFIG['app_site_register_require_enterprise_code'] 		= 0; //make the user ente
 $CONFIG['app_site_register_require_recaptcha'] 				= 0; //0=off, 1=on.  if 1 go to https://www.google.com/recaptcha/admin#list to get your keys
 $CONFIG['app_site_register_require_recaptcha_site_key'] 	= ''; 
 $CONFIG['app_site_register_require_recaptcha_secret_key']	= ''; 
+
+
+
+
+//-----------------------------------------------------------------
+//						EMAIL CONFIGURATION
+//-----------------------------------------------------------------
+
+$CONFIG['email_server_type']			= "php";
+$CONFIG['email_server_ip']				= "";
+$CONFIG['email_server_port']			= "";
+$CONFIG['email_server_protocol']		= "";
+$CONFIG['email_server_auth_user']		= "";
+$CONFIG['email_server_auth_password']	= "";
+$CONFIG['email_server_from_address']	= 'Johny Apple Seed <jas@example.com>';
 
 
 
