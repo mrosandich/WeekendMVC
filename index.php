@@ -27,6 +27,7 @@ include("config.php");
 include("classes/class_web.php");
 include("classes/class_db.php");
 include("classes/class_user.php");
+include("classes/class_email.php");
 
 include("classes/class_menu_item.php");
 include("classes/class_forms.php");
@@ -36,5 +37,5 @@ include("classes/class_app.php");
 include("classes/class_page.php");
 include("classes/class_pageflow.php");
 
-include("classes/class_email.php");
+
 ?>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: db467850438.db.1and1.com:3306
--- Generation Time: Aug 05, 2015 at 01:50 PM
+-- Generation Time: Aug 12, 2015 at 09:37 AM
 -- Server version: 5.1.73-log
 -- PHP Version: 5.5.26
 
@@ -23,6 +23,76 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `address_states`
+--
+
+CREATE TABLE IF NOT EXISTS `address_states` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `state` varchar(64) NOT NULL DEFAULT '',
+  `abbreviation` char(2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=52 ;
+
+--
+-- Dumping data for table `address_states`
+--
+
+INSERT INTO `address_states` (`id`, `state`, `abbreviation`) VALUES
+(1, 'Alabama', 'AL'),
+(2, 'Alaska', 'AK'),
+(3, 'Arizona', 'AZ'),
+(4, 'Arkansas', 'AR'),
+(5, 'California', 'CA'),
+(6, 'Colorado', 'CO'),
+(7, 'Connecticut', 'CT'),
+(8, 'Delaware', 'DE'),
+(9, 'District of Columbia', 'DC'),
+(10, 'Florida', 'FL'),
+(11, 'Georgia', 'GA'),
+(12, 'Hawaii', 'HI'),
+(13, 'Idaho', 'ID'),
+(14, 'Illinois', 'IL'),
+(15, 'Indiana', 'IN'),
+(16, 'Iowa', 'IA'),
+(17, 'Kansas', 'KS'),
+(18, 'Kentucky', 'KY'),
+(19, 'Louisiana', 'LA'),
+(20, 'Maine', 'ME'),
+(21, 'Maryland', 'MD'),
+(22, 'Massachusetts', 'MA'),
+(23, 'Michigan', 'MI'),
+(24, 'Minnesota', 'MN'),
+(25, 'Mississippi', 'MS'),
+(26, 'Missouri', 'MO'),
+(27, 'Montana', 'MT'),
+(28, 'Nebraska', 'NE'),
+(29, 'Nevada', 'NV'),
+(30, 'New Hampshire', 'NH'),
+(31, 'New Jersey', 'NJ'),
+(32, 'New Mexico', 'NM'),
+(33, 'New York', 'NY'),
+(34, 'North Carolina', 'NC'),
+(35, 'North Dakota', 'ND'),
+(36, 'Ohio', 'OH'),
+(37, 'Oklahoma', 'OK'),
+(38, 'Oregon', 'OR'),
+(39, 'Pennsylvania', 'PA'),
+(40, 'Rhode Island', 'RI'),
+(41, 'South Carolina', 'SC'),
+(42, 'South Dakota', 'SD'),
+(43, 'Tennessee', 'TN'),
+(44, 'Texas', 'TX'),
+(45, 'Utah', 'UT'),
+(46, 'Vermont', 'VT'),
+(47, 'Virginia', 'VA'),
+(48, 'Washington', 'WA'),
+(49, 'West Virginia', 'WV'),
+(50, 'Wisconsin', 'WI'),
+(51, 'Wyoming', 'WY');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `enterprise`
 --
 
@@ -32,15 +102,16 @@ CREATE TABLE IF NOT EXISTS `enterprise` (
   `enterprise_invite_code` varchar(250) COLLATE latin1_general_ci NOT NULL,
   `enterprise_parent` int(11) NOT NULL DEFAULT '0' COMMENT '0=is parent, anything else is the parents id',
   PRIMARY KEY (`enterprise_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `enterprise`
 --
 
 INSERT INTO `enterprise` (`enterprise_id`, `enterprise_name`, `enterprise_invite_code`, `enterprise_parent`) VALUES
-(1, 'example org', 'A510LPZ', 0),
-(2, 'ourace.com', 'Az0PlmAc', 0);
+(1, 'oe.mychc.org', 'A510LPZ', 0),
+(2, 'ourace.com', 'Az0PlmAc', 0),
+(3, 'Guest at mychc.org', 'guest', 0);
 
 -- --------------------------------------------------------
 
@@ -53,17 +124,19 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `name` varchar(32) COLLATE latin1_general_ci DEFAULT NULL,
   `desciption` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `roles`
 --
 
 INSERT INTO `roles` (`id`, `name`, `desciption`) VALUES
-(1, 'login', 'Login privileges, granted after account confirmation'),
-(2, 'admin', 'Administrative user, has access to everything.'),
-(3, 'user_profile', 'Allows users to edit their profile.'),
-(4, 'helloworld', 'Has acces to Helloworld');
+(1, 'guest', 'General guest roles'),
+(2, 'user', 'General user role'),
+(3, 'enterprise_manager', 'General Enterprise Manager role'),
+(4, 'site_admin', 'General Site administrator role'),
+(5, 'user_profile', 'has access to manage own user profile'),
+(6, 'helloworld', 'Access to helloworld application');
 
 -- --------------------------------------------------------
 
@@ -72,21 +145,25 @@ INSERT INTO `roles` (`id`, `name`, `desciption`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `roles_users` (
+  `ru_id` int(11) NOT NULL AUTO_INCREMENT,
   `role_id` int(11) NOT NULL,
-  `user_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`ru_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `roles_users`
 --
 
-INSERT INTO `roles_users` (`role_id`, `user_id`) VALUES
-(1, 2),
-(2, 2),
-(1, 3),
-(3, 2),
-(3, 3),
-(4, 2);
+INSERT INTO `roles_users` (`ru_id`, `role_id`, `user_id`) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 1, 2),
+(4, 3, 1),
+(5, 2, 2),
+(6, 4, 1),
+(8, 5, 1),
+(9, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -122,16 +199,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_login` int(11) DEFAULT NULL,
   `logins` int(11) DEFAULT NULL,
   `is_ldap` int(11) NOT NULL DEFAULT '0',
+  `activation_guid` varchar(100) COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=37 ;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `salt`, `name_first`, `name_last`, `email`, `enterprise_id`, `is_activated`, `activated_by_user_id`, `approval_state`, `failed_logins`, `is_locked`, `locked_message`, `secondary_login_action`, `secondary_code`, `secondary_code_date`, `secondary_fails`, `recovery_q1`, `recovery_q2`, `recovery_q3`, `recover_an1_enc`, `recover_an2_enc`, `recover_an3_enc`, `last_login`, `logins`, `is_ldap`) VALUES
-(2, 'admin', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 'The', 'Admin', 'admin@somefakedomain.abc', 1, 1, 2, 1, 0, 0, 'You account was locked due to too many failed logins', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1421437578, 86, 0),
-(3, 'basicuser', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 'Tester', 'Testing', 'basicuser@somefakedomain.abc', 1, 1, 2, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
+INSERT INTO `users` (`id`, `username`, `password`, `salt`, `name_first`, `name_last`, `email`, `enterprise_id`, `is_activated`, `activated_by_user_id`, `approval_state`, `failed_logins`, `is_locked`, `locked_message`, `secondary_login_action`, `secondary_code`, `secondary_code_date`, `secondary_fails`, `recovery_q1`, `recovery_q2`, `recovery_q3`, `recover_an1_enc`, `recover_an2_enc`, `recover_an3_enc`, `last_login`, `logins`, `is_ldap`, `activation_guid`) VALUES
+(1, 'admin', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 'The', 'Admin', 'admin@somefakedomain.abc', 1, 1, 2, 1, 0, 0, 'You account was locked due to too many failed logins', NULL, NULL, NULL, NULL, 'whats you pets name', 'What city is your favorite', 'What is your favorite color', 'Sammy', 'Paris', 'blue', 1421437578, 93, 0, ''),
+(2, 'basicuser', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 'Tester', 'Testing', 'basicuser@somefakedomain.abc', 1, 1, 2, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '');
 
 -- --------------------------------------------------------
 
@@ -146,13 +224,14 @@ CREATE TABLE IF NOT EXISTS `user_audit_login` (
   `date_time` datetime NOT NULL,
   `ip_address` varchar(100) COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=90 ;
 
 --
 -- Dumping data for table `user_audit_login`
 --
 
-
+INSERT INTO `user_audit_login` (`id`, `user_id`, `user_name`, `date_time`, `ip_address`) VALUES
+(89, 1, 'admin', '2015-08-12 09:35:04', '50.84.88.230');
 
 -- --------------------------------------------------------
 
@@ -167,12 +246,7 @@ CREATE TABLE IF NOT EXISTS `user_audit_login_fail` (
   `date_time` datetime NOT NULL,
   `ip_address` varchar(100) COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
-
---
--- Dumping data for table `user_audit_login_fail`
---
-
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=25 ;
 
 -- --------------------------------------------------------
 
@@ -186,15 +260,15 @@ CREATE TABLE IF NOT EXISTS `user_to_enterprise` (
   `ent_id` bigint(20) NOT NULL,
   `ute_type` varchar(10) COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`ute_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `user_to_enterprise`
 --
 
 INSERT INTO `user_to_enterprise` (`ute_id`, `user_id`, `ent_id`, `ute_type`) VALUES
-(1, 2, 1, ''),
-(2, 2, 2, '');
+(1, 1, 1, ''),
+(2, 1, 2, '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -100,6 +100,21 @@ class cForms{
 		}
 	}
 	
+	function setRawQueryBind(){
+		//Go through each element that was created and find the corresponding $_POST value. Set that value to the object
+		foreach ($this->boundElements as $key => $val ){
+			if( $val->bind_to_query == true ){
+				if($val->query_key ==""){
+					$val->form_value = $this->web_helper->getQueryValue($val->post_name, $val->form_value_default, $val->post_filter_type);
+				}else{
+					$val->form_value = $this->web_helper->getQueryValue($val->query_key, $val->form_value_default, $val->post_filter_type);
+				
+				}
+			
+			}
+		}
+	}
+	
 	function setCheckRepost(){
 		if( $this->web_helper->didPost() ){
 			 $this->setRawPostBind();

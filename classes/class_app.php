@@ -213,6 +213,7 @@ class cAPP{
 		if($this->pages_array[$current_index]->mvc_controller != ""){
 			if( file_exists("apps/" . $this->current_app_name . "/" . $this->pages_array[$current_index]->mvc_controller . "_controller.php") ){
 				include("apps/" . $this->current_app_name . "/" . $this->pages_array[$current_index]->mvc_controller . "_controller.php");
+				//echo "loading controller: " . "apps/" . $this->current_app_name . "/" . $this->pages_array[$current_index]->mvc_controller . "_controller.php"   ."<br />";
 			}
 		}
 	}

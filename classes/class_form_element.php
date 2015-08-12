@@ -44,6 +44,8 @@ class cFormElement{
 	var $auto_populate_db	= true; //when a select is called fill in the data
 	var $auto_populate_post	= true; //when a post is done fill in the data from $POST
 	var $bind_to_post		= true;
+	var $bind_to_query		= true;
+	var $query_key			= "";
 	
 	var $post_filter_type = "FILTER_SANITIZE_STRING";
 	

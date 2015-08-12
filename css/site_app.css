@@ -60,3 +60,31 @@
 .errortext{
 	color: #F00;
 }
+
+body{
+	padding: 10px;
+}
+
+#page{
+	
+}
+
+#content{
+	
+}
+
+#topmenu{
+	padding:10px;
+}
+
+#submenu{
+	padding:10px;
+}
+
+fieldset {
+	width:550px;
+	display: table-row;
+}
+
+label {width:180px;
+display: table-cell;}

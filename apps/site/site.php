@@ -99,14 +99,36 @@ class site_app extends cAPP{
 		return true;
 	}
 	
+	
 	function register(){
+		
+		 RegisterSetupForm($this);
+		 RegisterSetupFormDisplay($this);
 		return true;
 	}
 	
 	function register_do(){
+		
+		 RegisterSetupForm($this);
+		 $good_regpost = RegisterDoPost($this);
+		 if( !$good_regpost){
+			  RegisterSetupFormDisplay($this);
+		 }else{
+			
+			 return $this->web_helper->current_app_page;
+		 }
 		return true;
 	}
+	
 	function register_complete(){
+		return true;
+	}
+	
+	function register_code(){
+		
+		//clear the form data
+		$this->siteForms = new cForms($this->db,$this->config,$this->user);
+		ShowActCodeForm($this);
 		return true;
 	}
 	
@@ -221,6 +243,13 @@ class site_app extends cAPP{
 											0, 0, "Register", "", "",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
 											0, "register_complete"	,0,										//Does Post, Post To App Page name, Is Json Call Back
 											"","register_complete","register_complete");					//MVC-Model name, MVC-View Name, MVC-Controller Name
+											
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Register - Activation", $aStrCSS, $aStrJS,						//meta title, extra CSS, extra JS
+											$this->AppName, "register_code", 2, array(),					//AppName, AppPage, Is Public, Roles 
+											0, 0, "Register", "", "",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "register_code"	,0,											//Does Post, Post To App Page name, Is Json Call Back
+											"","register_code","register_code");							//MVC-Model name, MVC-View Name, MVC-Controller Name
 											
 											
 											

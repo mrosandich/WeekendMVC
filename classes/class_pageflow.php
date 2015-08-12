@@ -151,18 +151,20 @@ class cPageFlow {
 	}//end construct
 	
 	function callMVC($strPageName,$CurrentAppClass){
-		$CurrentAppClass->loadMVCController();
 		$CurrentAppClass->current_app_page = $strPageName;
+		$CurrentAppClass->loadMVCController();
+		
 		$temp_page_index = $CurrentAppClass->getCurrentPageIndex();
 		$temp_has_access = $CurrentAppClass->hasAccessToPage($temp_page_index);
 		if( $temp_has_access == 1 ){
 			if( method_exists($CurrentAppClass,$strPageName) ){
+				$CurrentAppClass->$strPageName();
 				$CurrentAppClass->loadMVCView();
 				$CurrentAppClass->loadMenuHTML();
 				$CurrentAppClass->loadRenderTemplate();
 			}else{
 				if(DEBUG_ECHO == true){
-					echo "$temp_function() doesn't exsist in apps/" . $this->current_app . "/" . $this->current_app . ".php";
+					echo "$temp_function() doesn't exist in apps/" . $this->current_app . "/" . $this->current_app . ".php";
 				}
 			}
 		}else{

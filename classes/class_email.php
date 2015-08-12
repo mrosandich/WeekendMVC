@@ -33,7 +33,7 @@ class cEmail{
 	var $email_server_protocol			= "smtp";
 	var $email_server_auth_user 		= "";
 	var $email_server_auth_password 	= "";
-	var $email_server_from				= "";
+	var $email_server_from_address		= "";
 	var $web_helper;
 	
 	var $toAddress						= array();
@@ -52,26 +52,26 @@ class cEmail{
 		$this->email_server_protocol		= $this->config['email_server_protocol'];
 		$this->email_server_auth_user 		= $this->config['email_server_auth_user'];
 		$this->email_server_auth_password 	= $this->config['email_server_auth_password'];
-		$this->email_server_from			= $this->config['email_server_from_address'];
+		$this->email_server_from_address	= $this->config['email_server_from_address'];
 		
 		$this->web_helper 			= new cWeb();
 	}
 	
 	function addToAddress($name,$email){
-		$toAddress[$email] = $name;
+		$this->toAddress[$email] = $name;
 	}
 	function addCCAddress($name,$email){
-		$ccAddress[$email] = $name;
+		$this->ccAddress[$email] = $name;
 	}
 	function addBCCAddress($name,$email){
-		$bccAddress[$email] = $name;
+		$this->bccAddress[$email] = $name;
 	}
 	
 	
 	function getAppEmailTemplate($htmlMixed){
 		$retString = "";
 		//looks for the app name , app page in the email template folder inside the apps/yourapp/email_templates/app_pagename.php		
-		if( file_exist("apps/" . $this->web_helper->current_app_name . "/email_templates/" . $this->web_helper->current_app_page . ".php") ){
+		if( file_exists("apps/" . $this->web_helper->current_app_name . "/email_templates/" . $this->web_helper->current_app_page . ".php") ){
 			include("apps/" . $this->web_helper->current_app_name . "/email_templates/" . $this->web_helper->current_app_page . ".php");
 			$retString = getEmailContent($htmlMixed);
 		}
@@ -89,18 +89,18 @@ class cEmail{
 	}
 	
 	function sendEmail( $subject, $htmlMixed){
-		
+		$headers="";
 		$temp_to_addresses = "";
 		foreach( $this->toAddress as $email => $Toname ){
 			$temp_to_addresses.= $Toname . '<' . $email . '>,';
+			
 		}
 		$temp_to_addresses = rtrim($temp_to_addresses,",");
 		
 		
-		$headers  = 'MIME-Version: 1.0' . "\r\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 		
-		$headers .= 'From: ' . $email_server_from . "\r\n";  
+		
+		$headers .= 'From: ' . $this->email_server_from_address . "\r\n";  
 		
 		if( count($this->ccAddress) > 0 ){
 			$temp_cc_addresses = "";
@@ -120,10 +120,12 @@ class cEmail{
 			$headers .= 'Bcc: ' . $temp_bcc_addresses . "\r\n";
 		}
 		
-		$message = $this->getAppEmailTemplate($htmlArray);
+		$message = $this->getAppEmailTemplate($htmlMixed);
+		$headers .= 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
+		
 		mail($temp_to_addresses, $subject, $message, $headers);
 	}
 }
-$emailService = new cEmail($db,$CONFIG,$user);
 ?>
