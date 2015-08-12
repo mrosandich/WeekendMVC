@@ -81,9 +81,10 @@ class cDB {
 		$this->results 		= $this->statement->fetchAll(PDO::FETCH_OBJ);
 		$this->resultCount 	= $this->statement->rowCount();
 		$this->last_id 		= $this->db->lastInsertId();
-		if( gettype($this->results) == "integer" ){  
-			$this->affected_rows = $this->results;
-		}
+		
+		
+		$this->affected_rows = $this->statement->rowCount();
+		
 		
 		//clear statement and params
 		return $this->results;

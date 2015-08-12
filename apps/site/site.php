@@ -128,7 +128,23 @@ class site_app extends cAPP{
 		
 		//clear the form data
 		$this->siteForms = new cForms($this->db,$this->config,$this->user);
-		ShowActCodeForm($this);
+		if( $this->web_helper->didPost() ){
+				$this->db->sql("update users set is_activated='1' where activation_guid=:activation_guid and username=:username");
+				$this->db->addParam(":username",$this->web_helper->getFormValue("username","","UserName"));
+				$this->db->addParam(":activation_guid",$this->web_helper->getFormValue("activation_guid","","ActivationGUID"));
+				$this->db->execute();
+				if( $this->db->getAffectedRowCount() > 0  ){
+					$this->app_user_message = "You account has been activated please login.";
+					$this->app_user_message_type = "good";
+					return 'login';
+				}else{
+					$this->app_user_message = "The information you entered is not valid or has expired";
+					$this->app_user_message_type = "warning";
+					ShowActCodeForm($this);
+				}
+		}else{
+			ShowActCodeForm($this);
+		}
 		return true;
 	}
 	

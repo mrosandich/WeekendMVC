@@ -95,6 +95,11 @@ class cWeb {
 			//$InValue = preg_replace("/[^a-zA-Z0-9]/", "", $InValue);
 		}
 		
+		if( $RegCleanType == "ActivationGUID" ){
+			$InValue = preg_replace("/[^A-Z0-9]/", "", $InValue);
+		}
+		
+		
 		if( $RegCleanType == "Email" ){
 			$InValue = preg_replace("/[^a-zA-Z0-9\s\.\_\@]/", "", $InValue);
 		}
