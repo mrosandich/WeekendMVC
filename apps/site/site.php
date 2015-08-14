@@ -234,6 +234,15 @@ class site_app extends cAPP{
 											0, "", 0,														//Does Post, Post To App Page name, Is Json Call Back
 											"", "", "");													//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
+		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Administration", $aStrCSS, $aStrJS,							//meta title, extra CSS, extra JS									
+											"siteadmin", "index", 0, array("site_admin"),					//AppName, AppPage, Is Public, Roles	 
+											1, 0, "Administration", "", "",									//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, "", 0,														//Does Post, Post To App Page name, Is Json Call Back
+											"", "", "");													//MVC-Model name, MVC-View Name, MVC-Controller Name
+		
+		
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
 											"helloworld", $aStrCSS, $aStrJS,								//meta title, extra CSS, extra JS									
 											"helloworld", "index", 0, array("helloworld"),					//AppName, AppPage, Is Public, Roles	 
@@ -292,14 +301,14 @@ class site_app extends cAPP{
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
 											"Profile", $aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
 											$this->AppName, "profile", 0, array("user_profile"),			//AppName, AppPage, Is Public, Roles 
-											1, 0, "Profile", "", "profile",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, 0, "Profile", "", "profile",									//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
 											1, "profile_update", 0,											//Does Post, Post To App Page name, Is Json Call Back
 											"", "profile", "profile");										//MVC-Model name, MVC-View Name, MVC-Controller Name
 											
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
 											"Profile", $aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
 											$this->AppName, "profile_update", 0, array("user_profile"),		//AppName, AppPage, Is Public, Roles 
-											0, 0, "Profile", "", "profile",										//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											0, 0, "Profile", "", "profile",									//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
 											0, "profile_update"	,0,											//Does Post, Post To App Page name, Is Json Call Back
 											"","profile","profile");										//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
