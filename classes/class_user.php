@@ -171,6 +171,17 @@ class cUser {
 		return $this->user_login_state;
 	}
 	
+	
+	function changePasswordViaRecovery($UserName,$ResetGuid,$NewPassword){
+		$NewPassword = md5($NewPassword);
+		$this->db->sql('update users set password=:password where username=:username and reset_guid=:reset_guid');
+		$this->db->addParam(":username",$UserName);
+		$this->db->addParam(":reset_guid",$ResetGuid);
+		$this->db->addParam(":password",$NewPassword);
+		$this->db->execute();
+	}
+	
+	
 	function addFailedAttempt($UserName,$FailedCount,$UserId){
 		//lets increment login failure
 		$this->db->sql('update users set failed_logins=failed_logins+1 where username=:username');

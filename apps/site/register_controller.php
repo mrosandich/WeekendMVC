@@ -139,7 +139,7 @@ function RegisterDoPost($passThis){
 				$emailService->sendEmail( $passThis->config['email_server_registration_email_subject'], $emailContent);
 				
 				$passThis->web_helper->current_app_page= "register_code";
-				$passThis->app_user_message = "We have sent you an email to <b>" . $passThis->siteForms->boundElements['email']->form_value . "</b> with activation instructions.";
+				$passThis->app_user_message = "We have sent  an email to <b>" . $passThis->siteForms->boundElements['email']->form_value . "</b> with activation instructions.";
 				$passThis->app_user_message_type = "warning";
 			}elseif($passThis->config['app_site_register_user_activation_method']=='enterprise_manager'){
 				

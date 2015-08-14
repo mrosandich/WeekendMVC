@@ -47,14 +47,13 @@ class site_app extends cAPP{
 	
 	*/
 	
-	function logout(){
+	function index(){
+		$this->addContent( "welcome to the website." );
 		return true;
 	}
 	
-	function profile(){
-		
-		return true;
-	}
+	
+	
 	
 	function login(){
 		
@@ -71,6 +70,15 @@ class site_app extends cAPP{
 			$this->app_user_message = $this->user->user_login_message;
 			return "login";
 		}
+	}
+	
+	function logout(){
+		return true;
+	}
+	
+	function profile(){
+		
+		return true;
 	}
 	
 	function profile_update(){
@@ -92,12 +100,74 @@ class site_app extends cAPP{
 	
 	
 	function recoverypassword(){
+		 CreateRecoveryForm($this);
 		return true;
 	}
-	function index(){
-		$this->addContent( "welcome to the website." );
+	function recoverypassword_do(){
+		 CreateRecoveryForm($this);
+		 $isValidEmail = CheckRecoveryForm($this);
+		 if($isValidEmail){
+			 //good email and user combo
+			 $this->addContent( "Please check your email for the recovery link." );
+			 return true;
+		 }else{
+			 //
+			  //ShowRecoveryForm($this);
+			  $this->app_user_message = "We were unable to find a username and email combination that matched your request.";
+			  $this->app_user_message_type = "bad";
+			  return true;
+		 }
 		return true;
 	}
+	
+	function recoverypassword_link(){
+		//$this->siteForms = new cForms($this->db,$this->config,$this->user);
+		if( $this->web_helper->didPost() ){
+				$this->db->sql("select * from users where reset_guid=:reset_guid and username=:username");
+				$this->db->addParam(":username",$this->web_helper->getFormValue("username","","UserName"));
+				$this->db->addParam(":reset_guid",$this->web_helper->getFormValue("reset_guid","","ActivationGUID"));
+				$resultset = $this->db->execute();
+				
+				if( $resultset[0]->username ==  $this->web_helper->getFormValue("username","","UserName") ){
+					$this->app_user_message = "You code was accepted. Please update your password in the below form.";
+					$this->app_user_message_type = "good";
+					if($this->web_helper->getFormValue("passchange","","Alpha") == "Yes"){
+						createResetPassForm($this,$this->web_helper->getFormValue("reset_guid","","ActivationGUID"),$this->web_helper->getFormValue("username","","UserName"));
+						$GoodData = $this->siteForms->bindAndFilter();
+						
+						//if passwords match and is not blank then send to sql with value of password MD5 hashed.
+						if( $this->siteForms->boundElements['password']->form_value  == $this->siteForms->boundElements['pass2']->form_value){
+							//good pass
+						}else{
+							$this->siteForms->HTMLErrors[$this->web_helper->current_app_page] .= "Password did not match.";
+							$GoodData = false;
+						}
+
+						if( $GoodData == true ){
+							$this->user->changePasswordViaRecovery($this->siteForms->boundElements['username']->form_value,$this->siteForms->boundElements['reset_guid']->form_value,$this->siteForms->boundElements['password']->form_value);
+							$this->app_user_message = "Password Updated";
+							$this->app_user_message_type = "good";
+							return 'login';
+						}else{
+							$this->app_user_message = $this->siteForms->HTMLErrors[$this->web_helper->current_app_page];
+							$this->app_user_message_type = "warning";
+						}
+						
+						
+					}else{
+						createResetPassForm($this,$this->web_helper->getFormValue("reset_guid","","ActivationGUID"),$this->web_helper->getFormValue("username","","UserName"));
+					}
+				}else{
+					$this->app_user_message = "The information you entered is not valid or has expired";
+					$this->app_user_message_type = "warning";
+					createResetCodeForm($this);
+				}
+		}else{
+			createResetCodeForm($this);
+		}
+		return true;
+	}
+	
 	
 	
 	function register(){
@@ -185,7 +255,7 @@ class site_app extends cAPP{
 											1, "" ,0,														//Does Post, Post To App Page name, Is Json Call Back
 											"", "", "");													//MVC-Model name, MVC-View Name, MVC-Controller Name
 
-		
+		//revocer password
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
 											"Recover Password", 	$aStrCSS, 								//meta title, extra CSS, extra JS
 											$aStrJS,$this->AppName, "recoverypassword", 2, array(),			//AppName, AppPage, Is Public, Roles 
@@ -200,7 +270,17 @@ class site_app extends cAPP{
 											1, "recoverypassword_do", 0,									//Does Post, Post To App Page name, Is Json Call Back
 											"", "recoverypassword", "recoverypassword");					//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
+		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
+											"Recover Password", $aStrCSS, $aStrJS,							//meta title, extra CSS, extra JS
+											$this->AppName, "recoverypassword_link", 2, array(),				//AppName, AppPage, Is Public, Roles 
+											0, 0, "Recover", "", "",											//Is Menu, Menu Always Show, MenuTitle, MenuItemImage, MenuGroup
+											1, "recoverypassword_link", 0,									//Does Post, Post To App Page name, Is Json Call Back
+											"", "recoverypassword_link", "recoverypassword_link");			//MVC-Model name, MVC-View Name, MVC-Controller Name
 		
+		
+		
+		
+		//logout
 		$this->pages_array[] = new cPage($this->db,$this->config,$this->user,								//Database, Config, user
 											"Logout", 	$aStrCSS, $aStrJS,									//meta title, extra CSS, extra JS
 											$this->AppName, "logout", 0, array() ,							//AppName, AppPage, Is Public, Roles 
