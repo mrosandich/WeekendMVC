@@ -207,9 +207,13 @@ class cUser {
 	
 	function updateLogin($UserName,$UserId){
 		//Lets increase the login count and clear the failed logins
-		$this->db->sql('update users set logins=logins+1,failed_logins=:failed_logins where username=:username');
+		$this->db->sql('update users set logins=logins+1,failed_logins=:failed_logins,last_login_date=:last_login_date, last_login_epoch=:last_login_epoch where username=:username');
 		$this->db->addParam(":username",$UserName);
 		$this->db->addParam(":failed_logins",0);
+		$this->db->addParam(":last_login_date",date("Y-m-d H:i:s"));
+		$this->db->addParam(":last_login_epoch",date("U"));
+		
+		
 		$this->db->execute();
 		
 		//let log the entry

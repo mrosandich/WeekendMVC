@@ -32,6 +32,7 @@ include("classes/class_email.php");
 include("classes/class_menu_item.php");
 include("classes/class_forms.php");
 include("classes/class_form_element.php");
+include("classes/class_formlist.php");
 
 include("classes/class_app.php");
 include("classes/class_page.php");

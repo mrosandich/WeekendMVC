@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 <title><?php echo $this->pages_array[ $SelectedPageIndex ]->page_title;?></title>
-<link rel="stylesheet" type="text/css" href="css/site_app.css">
+<link rel="stylesheet" type="text/css" href="css/siteadmin_app.css">
 <?php
 	for($x=0;$x<count($this->pages_array[ $SelectedPageIndex ]->page_css);$x++){
 		echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$this->pages_array[ $SelectedPageIndex ]->page_css[$x]}\">\n";

@@ -35,6 +35,7 @@ class cForms{
 	var $table_name			= ""; //name of the table this is going to bind to.
 	var $table_pk_col		= ""; //The primary key col name used for updates, and deletes
 	var $table_action		= ""; //select,update,delete,copy(insert same data with new PK)
+	var $sql_where_filter	= array();
 	
 	var $boundElements			= array(); //all the db elements keyed of ColName
 	
@@ -44,6 +45,9 @@ class cForms{
 	var $HTMLFormStart		= "";
 	var $HTMLFormEnd		= "</form>";
 	var $HTMLErrors			= array();
+	
+	
+	
 	
 	function __construct($cDBObject,$SiteConfig,$cUser){
 		$this->db 					= $cDBObject;
@@ -65,6 +69,8 @@ class cForms{
 		$this->table_action = $TableAction;
 	}
 	
+	
+	
 	function createElement($ColName,$IsBound, $PostName="", $Roles="", $Filters=""){
 		//If just ColName is provide it will assume post var name is the same.
 		//If you want to add roles per field, you can pass an array of the roles required to have access to that field.
@@ -78,12 +84,6 @@ class cForms{
 	}
 	
 	
-	
-	
-	
-	function setFormElement($ColName){
-		
-	}
 	
 	function clearBind(){
 		$this->boundElements = array();
@@ -193,6 +193,11 @@ class cForms{
 			
 			return $current_element;
 	}
+	
+	
+	
+	
+	
 	
 	//-----------------------------------------------------------------------------------------------
 	//											SQL Interactions.		

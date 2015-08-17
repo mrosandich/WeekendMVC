@@ -30,6 +30,7 @@ class cAPP{
 	var $AppName 					= "";
 	var $AppTemplate 				= "";
 	var $page_content				= "";
+	var $page_content_view			= "";		//this is just a temp var for passing just content from controller to view.
 	var $menu_content				= ""; 		// a blob of html for a quick easy render of the main menu
 	var $menu_sub_content 			= ""; 		// a blob of html for a quick easy render of the sub menu
 	var $menu_items_template		= array();  //use this if you want to generate you menu in your template properties: linktext, linkurl, linkimage, linkactive
@@ -97,7 +98,7 @@ class cAPP{
 			if($this->pages_array[$x]->menu_is_menu_item == 1 ){
 				if($this->pages_array[$x]->menu_group == "" || $this->pages_array[$x]->menu_group == $this->pages_array[$x]->app_page){//has no submenu or is a parent menu
 					$isActive = 0;
-					if($this->pages_array[$x]->app_page == $this->current_app_page || $this->inParentSubMenu($this->pages_array[$x]->app_page) == true ){
+					if( ($this->pages_array[$x]->app_page == $this->current_app_page && $this->pages_array[$x]->app_name == $this->current_app_name ) || $this->inParentSubMenu($this->pages_array[$x]->app_page) == true ){
 						$isActive = 1;
 					}
 					if($this->pages_array[$x]->is_public == 1 && $this->compareRoles($this->pages_array[$x]->required_roles)==1 ){

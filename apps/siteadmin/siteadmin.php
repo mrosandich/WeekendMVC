@@ -53,7 +53,7 @@ class siteadmin_app extends cAPP{
 	}
 	
 	function users(){
-		$this->addContent( "welcome to the admin panel: users." );
+		ShowUserList($this);
 		return true;
 	}
 	

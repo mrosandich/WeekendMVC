@@ -31,9 +31,14 @@ class cDB {
 	var $last_id 		= -1;
 	var $affected_rows	= -1;
 	var $pre_sql		= "";
-	
+	var $db_fetch_how	= PDO::FETCH_OBJ;
 	var $is_prepared = 0;
 	var $error_message = "";
+	
+	var $hasWhereClause = 0;
+	var $whereClause	= "";
+	
+	
 	
 	function __construct($CONFIG){
 		$this->db = new PDO("mysql:host={$CONFIG['db_host']};dbname={$CONFIG['db_name']};charset=utf8", $CONFIG['db_username'], $CONFIG['db_password']);
@@ -72,13 +77,25 @@ class cDB {
 		}
 	}
 	
+	function addWhere($wherePhrase ){
+		$this->hasWhereClause = 1;
+		$this->whereClause = $wherePhrase;
+		$newSQL = $this->pre_sql . " where " . $wherePhrase;
+		$this->statement = $this->db->prepare($newSQL);
+	}
+	
+	
+	
+	
+	
+	
 	function execute(){
 		if( $this->is_prepared == 0 ){
 			$this->error_message = "Tried to execute an empty SQL statement";
 			return;
 		}
 		$this->statement->execute();
-		$this->results 		= $this->statement->fetchAll(PDO::FETCH_OBJ);
+		$this->results 		= $this->statement->fetchAll($this->db_fetch_how);
 		$this->resultCount 	= $this->statement->rowCount();
 		$this->last_id 		= $this->db->lastInsertId();
 		
