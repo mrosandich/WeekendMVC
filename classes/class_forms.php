@@ -42,7 +42,7 @@ class cForms{
 	//this describes how the elements of the for will be displayed. Could be a TR row, or a span, or divs. You can override each element as well.
 	//replaces items within the string on output [id],[labelname],[formelement]
 	var $HTMLOutFormat		= "<fieldset id=\"fs_[id]\">\n\t<label>[labelname]</label>\n\t[formelement]\n[formcaption]<span class=\"errortext\">[errormsg]</span></fieldset>"; 
-	var $HTMLFormStart		= "";
+	var $HTMLFormStart		= ""; //this can be overrided. it is set in the app_load of the controller which calls page->getFormActionHTML
 	var $HTMLFormEnd		= "</form>";
 	var $HTMLErrors			= array();
 	
@@ -182,11 +182,15 @@ class cForms{
 		}
 		$form_element_html = $this->boundElements[$KeyName]->renderElement();
 			if( $this->boundElements[$KeyName]->is_visible ){
-				$current_element = str_replace('[formelement]',$form_element_html,$this->HTMLOutFormat);
-				$current_element = str_replace('[labelname]',$this->boundElements[$KeyName]->form_label,$current_element);
-				$current_element = str_replace('[id]',$this->boundElements[$KeyName]->post_name,$current_element);
-				$current_element = str_replace('[formcaption]',$this->boundElements[$KeyName]->form_caption,$current_element);
-				$current_element = str_replace('[errormsg]',$this->boundElements[$KeyName]->getErrorText(),$current_element);
+				if( $this->boundElements[$KeyName]->form_web_type ==  "html_space_group" ){
+					$current_element =  $this->boundElements[$KeyName]->html_space_group;
+				}else{
+					$current_element = str_replace('[formelement]',$form_element_html,$this->HTMLOutFormat);
+					$current_element = str_replace('[labelname]',$this->boundElements[$KeyName]->form_label,$current_element);
+					$current_element = str_replace('[id]',$this->boundElements[$KeyName]->post_name,$current_element);
+					$current_element = str_replace('[formcaption]',$this->boundElements[$KeyName]->form_caption,$current_element);
+					$current_element = str_replace('[errormsg]',$this->boundElements[$KeyName]->getErrorText(),$current_element);
+				}
 			}else{
 				$current_element=$form_element_html;
 			}

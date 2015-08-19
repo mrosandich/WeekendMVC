@@ -33,7 +33,7 @@ class cFormElement{
 	
 	var $form_value 		= ""; //the value of the form value="here"
 	var $form_web_type		= ""; //text, hidden,select,etc..
-	var $form_value_default = ""; //if no value set then load it with this after post
+	var $form_value_default = ""; //if no value set then load it with this after post. Also used for the check box value
 	var $form_label			= ""; //the title part of the html 
 	var $form_caption		= "";
 	var $form_cntrl_values	= array(); //hold thing like the option values in a select control
@@ -46,6 +46,8 @@ class cFormElement{
 	var $bind_to_post		= true;
 	var $bind_to_query		= true;
 	var $query_key			= "";
+	
+	var $html_space_group	= "<br /><br />"; //use this to break up your forms, add headers, etc.
 	
 	var $post_filter_type = "FILTER_SANITIZE_STRING";
 	
@@ -104,6 +106,11 @@ class cFormElement{
 			$this->is_visible = true;
 			return "<input type=\"text\" value=\"$temp_value\" name=\"{$this->post_name}\" id=\"{$this->post_name}\" />";
 		}
+		if( $this->form_web_type == "textarea" ){
+			$this->is_visible = true;
+			return "<textarea name=\"{$this->post_name}\" id=\"{$this->post_name}\" >$temp_value</textarea>";
+		}
+		
 		if( $this->form_web_type == "hidden" ){
 			$this->is_visible = false;
 			return "<input type=\"hidden\" value=\"$temp_value\" name=\"{$this->post_name}\" id=\"{$this->post_name}\" />";
@@ -120,6 +127,23 @@ class cFormElement{
 			$this->is_visible = true;
 			return "$temp_value";
 		}
+		
+		
+		if( $this->form_web_type == "checkbox" ){
+			$this->is_visible = true;
+			if( $this->form_value_default == $temp_value ){
+				return "<input type=\"checkbox\" value=\"{$this->form_value_default}\" name=\"{$this->post_name}\" id=\"{$this->post_name}\" checked/>";
+			}else{
+				return "<input type=\"checkbox\" value=\"{$this->form_value_default}\" name=\"{$this->post_name}\" id=\"{$this->post_name}\" />";
+			}
+		}
+		
+		if( $this->form_web_type == "html_space_group" ){
+			$this->is_visible = true;
+			return $this->html_space_group;
+		}
+		
+		
 		
 		if( $this->form_web_type == "select" ){
 			$this->is_visible = true;

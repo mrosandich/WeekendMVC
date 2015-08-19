@@ -53,7 +53,24 @@ class siteadmin_app extends cAPP{
 	}
 	
 	function users(){
-		ShowUserList($this);
+		
+		if($this->web_helper->didPost() == true){
+			LoadUser($this);
+			$GoodData = $this->siteForms->bindAndFilter();
+			if( $GoodData == true ){
+				SaveUser($this);
+			}else{
+				ShowUserForm($this);
+			}
+		}else{
+			
+			if($this->web_helper->getQueryValue("id","") == "" ){
+				ShowUserList($this);
+			}else{
+				LoadUser($this);
+				ShowUserForm($this);
+			}
+		}
 		return true;
 	}
 	

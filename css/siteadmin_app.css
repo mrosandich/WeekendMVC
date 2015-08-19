@@ -90,7 +90,7 @@ label {width:180px;
 display: table-cell;}
 
 #userTable{
-	width:650px;
+	width:850px;
 }
 #userTable th{
 	border-bottom: 2px solid #666;
@@ -102,4 +102,12 @@ display: table-cell;}
 }
 #userTable tr:hover{
 	background-color: #FF0;
+}
+
+input {
+width:200px;
+}
+textarea {
+	width:200px;
+	height:60px;
 }
