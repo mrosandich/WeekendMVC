@@ -30,10 +30,19 @@ function LoadUser($passThis){
 	
 	$passThis->siteForms->createElement('id',true,'id',"", "Numeric");
 	$passThis->siteForms->boundElements['id']->form_web_type = "hidden";
+	
+	$passThis->siteForms->createElement('oldusername',false,'oldusername',"", "UserName");
+	$passThis->siteForms->boundElements['oldusername']->form_web_type = "hidden";
+	$passThis->siteForms->boundElements['oldusername']->col_name='username';
+	$passThis->siteForms->boundElements['oldusername']->auto_populate_db = true;
 
 	$passThis->siteForms->createElement('username',true,'',"", "UserName");
 	$passThis->siteForms->boundElements['username']->form_web_type = "text";
 	$passThis->siteForms->boundElements['username']->form_label	 = "username";
+	$passThis->siteForms->boundElements['username']->addValidation('valueNotInDBTable',array('table'=>'users','col'=>'username','ignoreorignalvalue'=> $passThis->web_helper->getFormValue("oldusername","","Username")) );
+	$passThis->siteForms->boundElements['username']->addValidation('notEmpty',array());
+	$passThis->siteForms->boundElements['username']->db = $passThis->db;
+		
 
 	$passThis->siteForms->createElement('name_first',true,'',"", "AlphaNumeric");
 	$passThis->siteForms->boundElements['name_first']->form_web_type = "text";

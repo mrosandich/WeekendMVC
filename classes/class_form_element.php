@@ -176,17 +176,29 @@ class cFormElement{
 	
 	//check that thee is a value
 	function notEmpty($arrayParams){
+		
+		$ErrorMessageOut = " can't be blank. ";
+		if( array_key_exists('errormessage',$arrayParams) ){
+			$ErrorMessageOut = $arrayParams['errormessage'];
+		}
+		
 		if( $this->form_value == "" ){
-			$this->HTMLErrors[] = array($this->col_name =>  " can't be blank. ");
+			$this->HTMLErrors[] = array($this->col_name =>  $ErrorMessageOut);
 		}
 	}
 	
 	//check to see if it is a valid email address
 	function isEmail($arrayParams){
+		
+		$ErrorMessageOut = " is not a valid email address. ";
+		if( array_key_exists('errormessage',$arrayParams) ){
+			$ErrorMessageOut = $arrayParams['errormessage'];
+		}
+		
 		if (!filter_var($this->form_value, FILTER_VALIDATE_EMAIL) === false) {
 			//valid email
 		} else {
-			$this->HTMLErrors[] = array($this->col_name => " is not a valid email address. ");
+			$this->HTMLErrors[] = array($this->col_name => $ErrorMessageOut);
 		}
 	}
 	
@@ -280,12 +292,18 @@ class cFormElement{
 		}
 		$temp_cweb 		= new cWeb();
 		$temp_value 	= $temp_cweb->getFormValue($arrayParams['formname'],"", $post_filter_type);
+		
+		$ErrorMessageOut = " needs to match ";
+		if( array_key_exists('errormessage',$arrayParams) ){
+			$ErrorMessageOut = $arrayParams['errormessage'];
+		}
+		
 		if( $this->form_value != $temp_value ){
 			$temp_verb = "";
 			if( $this->form_label == $arrayParams['formlabel'] ){
 				$temp_verb = "other ";
 			}
-			$this->HTMLErrors[] = array($this->col_name =>  " needs to match " . $temp_verb . $arrayParams['formlabel'] . ". ");
+			$this->HTMLErrors[] = array($this->col_name =>  $ErrorMessageOut . $temp_verb . $arrayParams['formlabel'] . ". ");
 		}
 	}
 	
@@ -306,13 +324,33 @@ class cFormElement{
 			return false;
 		}
 		
+		
+		
+		$ErrorMessageOut = " is already taken. Please choose another. ";
+		if( array_key_exists('errormessage',$arrayParams) ){
+			$ErrorMessageOut = $arrayParams['errormessage'];
+		}
+		
 		$Statement = "select * from {$arrayParams['table']} where {$arrayParams['col']}=:formvalue";
+		if( array_key_exists('ignoreorignalvalue',$arrayParams) ){
+			if( $arrayParams['ignoreorignalvalue'] != "" ){
+				$Statement = "select * from {$arrayParams['table']} where {$arrayParams['col']}=:formvalue and  {$arrayParams['col']}!=:ignoreorignalvalue";
+			}
+		}
+		
 		$this->db->sql($Statement);
 		$this->db->addParam(":formvalue" ,$this->form_value);
+		
+		if( array_key_exists('ignoreorignalvalue',$arrayParams) ){
+			if( $arrayParams['ignoreorignalvalue'] != "" ){
+				$this->db->addParam(":ignoreorignalvalue" ,$arrayParams['ignoreorignalvalue']);
+			}
+		}
+		
 		$result = $this->db->execute();
 		$RecordsReturned = $this->db->getResultCount();
 		if( $RecordsReturned > 0 ){
-			$this->HTMLErrors[] = array($this->col_name => " is already taken. Please choose another. ");
+			$this->HTMLErrors[] = array($this->col_name => $ErrorMessageOut);
 		}
 	}
 	
@@ -330,13 +368,18 @@ class cFormElement{
 			return false;
 		}
 		
+		$ErrorMessageOut = " not valid. ";
+		if( array_key_exists('errormessage',$arrayParams) ){
+			$ErrorMessageOut = $arrayParams['errormessage'];
+		}
+		
 		$Statement = "select * from {$arrayParams['table']} where {$arrayParams['col']}=:formvalue";
 		$this->db->sql($Statement);
 		$this->db->addParam(":formvalue" ,$this->form_value);
 		$result = $this->db->execute();
 		$RecordsReturned = $this->db->getResultCount();
 		if( $RecordsReturned < 1 ){
-			$this->HTMLErrors[] = array($this->col_name => " not valid. ");
+			$this->HTMLErrors[] = array($this->col_name => $ErrorMessageOut);
 		}
 	}
 }

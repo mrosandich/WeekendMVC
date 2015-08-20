@@ -217,7 +217,7 @@ class cForms{
 			foreach ($this->boundElements as $key => $val ){
 				if( $val->is_bound == true || $val->auto_populate_db == true){
 					foreach($result[0] as $item_key => $item_val ){
-						if( $key == $item_key ){
+						if( $val->col_name == $item_key ){
 							$val->form_value =  $item_val;
 						}
 					}
