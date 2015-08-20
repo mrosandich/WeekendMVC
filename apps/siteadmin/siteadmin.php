@@ -59,6 +59,7 @@ class siteadmin_app extends cAPP{
 			$GoodData = $this->siteForms->bindAndFilter();
 			if( $GoodData == true ){
 				SaveUser($this);
+				ShowUserList($this);
 			}else{
 				ShowUserForm($this);
 			}
