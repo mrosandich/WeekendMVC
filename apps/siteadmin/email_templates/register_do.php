@@ -47,3 +47,4 @@ function getEmailContent($strArray){
 	
 	return $retString;
 }//end function getEmailContent
+?>

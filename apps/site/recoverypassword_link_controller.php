@@ -79,4 +79,3 @@ function  createResetPassForm($passThis,$reset_guid="",$username=""){
 }
 	
 ?>
-
